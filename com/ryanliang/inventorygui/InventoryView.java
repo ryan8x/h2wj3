@@ -27,9 +27,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.ryanliang.inventory.Controllable;
-import com.ryanliang.inventory.Modellable;
-
 @SuppressWarnings("serial")
 public class InventoryView extends JFrame implements Viewable{
 	
@@ -179,30 +176,17 @@ public class InventoryView extends JFrame implements Viewable{
 */
 
 	private void displayContacts() {
+		scrollPane = new JScrollPane();
+/*		for (int ii=0; ii < 100; ii++){
+			scrollPane.add(new JLabel("test" + ii));
+		}
+*/
+		scrollPane.add(new JLabel("test"));
+		add(scrollPane);
 
-		
 		//Refresh frame components in case table contents are changed.
 		validate();
 	}
-
-/*
-	public static void main(String[] args) {
-		
-		AddressBook app = new AddressBook();
-		
-		app.generateSampleContacts(10);
-		
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		Dimension screenSize = kit.getScreenSize();
-		int screenWidth = (int) (screenSize.width*0.8);
-		int screenHeight = (int) (screenSize.height*0.8);
-		app.setSize(screenWidth, screenHeight);
-		//app.pack();
-		app.setLocationRelativeTo(null);
-		app.setVisible(true);
-
-	}
-*/
 
 	@Override
 	public void setModel(Modellable model) {
@@ -212,7 +196,16 @@ public class InventoryView extends JFrame implements Viewable{
 
 	@Override
 	public void start() {
-		// TODO Auto-generated method stub
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Dimension screenSize = kit.getScreenSize();
+		int screenWidth = (int) (screenSize.width*0.8);
+		int screenHeight = (int) (screenSize.height*0.8);
+		this.setSize(screenWidth, screenHeight);
+		//app.pack();
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
+		
+		displayContacts();
 
 	}
 
