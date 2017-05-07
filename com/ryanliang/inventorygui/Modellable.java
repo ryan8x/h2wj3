@@ -1,12 +1,14 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;
 
 public interface Modellable {
 
+	public void setView(Viewable view);
+	
 	public void addItem(Media media, String quantity);
 
 	public void saveData();

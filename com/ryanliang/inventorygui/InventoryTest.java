@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;
@@ -15,7 +15,7 @@ public class InventoryTest {
 		
 		view.setModel(model);
 		model.setView(view);
-		view.mainMenu();
+		view.start();
 
 	}
 

@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;

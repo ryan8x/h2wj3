@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;
@@ -27,16 +27,22 @@ public class InventoryModel implements Modellable {
 	private final String IDMemoryFile = "ID_memory.dat";
 	private final String inventoryFile = "Inventory.dat";
 	
+	private final static String delimiter = "-1a-2b-";
 	private static long IDCounter = 0;
 	
 	@Override
 	public void addItem(Media media, String quantityA) {
-		String quantity = quantityA;
-		String ID = media.getID();
-	
-		setData(media);
-		inventory.setProperty(ID, quantity);
-		IDMemory.setProperty("IDCounter", String.valueOf(++IDCounter));
+
+		if (media != null && quantityA != null){
+			String quantity = quantityA;
+			String ID = media.getID();
+
+			setData(media);
+			inventory.setProperty(ID, quantity);
+			IDMemory.setProperty("IDCounter", String.valueOf(++IDCounter));
+		}
+		else 
+			System.out.println("addItem(Media media, String quantityA) reference is null.");
 	}
 	
 	private void setData(Media media) {
@@ -45,7 +51,7 @@ public class InventoryModel implements Modellable {
 		String description = media.getDescription();
 		String genre = media.getGenre();
 		
-		String value = title + "---" + description + "---" + genre + "---";
+		String value = title + delimiter + description + delimiter + genre + delimiter;
 		
 		if (media instanceof CD){
 			String artist = ((CD) media).getArtist();
@@ -58,21 +64,24 @@ public class InventoryModel implements Modellable {
 		else if (media instanceof Book){
 			String author = ((Book) media).getAuthor();
 			String ISBN = ((Book) media).getISBN();
-			bookList.setProperty(ID, value + author + "---" + ISBN);
+			bookList.setProperty(ID, value + author + delimiter + ISBN);
 		}
 		
 	}
 
 	@Override
 	public void editItem(Media media, String quantity) {
-		
-		String ID = media.getID();
-		
-		setData(media);
-		
-		//Modify only if quantity is not empty and is a number (not consist of characters)
-		if (!quantity.equals("") && Utility.isNumeric(quantity))
-			inventory.setProperty(ID, quantity);
+	
+		if (media != null && quantity != null){
+			String ID = media.getID();
+			setData(media);
+
+			//Modify only if quantity is not empty and is a number (not consisting of alphabetic characters)
+			if (!quantity.equals("") && Utility.isNumeric(quantity))
+				inventory.setProperty(ID, quantity);
+		}
+		else 
+			System.out.println("editItem(Media media, String quantity) reference is null.");
 	}
 
 	@Override
@@ -144,7 +153,11 @@ public class InventoryModel implements Modellable {
 			if (fileID.exists() && !fileID.isDirectory()){
 				FileInputStream IDIn = new FileInputStream(IDMemoryFile);
 				IDMemory.load(IDIn);
-				IDCounter = Long.valueOf(IDMemory.getProperty("IDCounter"));
+				String tempID = IDMemory.getProperty("IDCounter");
+				
+				if (tempID != null)
+					IDCounter = Long.valueOf(tempID);
+				
 				IDIn.close();
 			}
 
@@ -154,14 +167,19 @@ public class InventoryModel implements Modellable {
 	}
 
 	public void setView(Viewable view) {
+
 		this.view = view;
-		
 	}
 	
 	@Override
-	public void searchItem(String itemID) {
-		searchItemHelper(itemID);
-		view.update(UpdateType.SEARCH_RESULT);
+	public void searchItem(String query) {
+
+		if (query != null){
+			searchItemHelper(query);
+			view.update(UpdateType.SEARCH_RESULT);
+		}
+		else 
+			System.out.println("searchItem(String query) reference is null.");
 	}
 	
 	@Override
@@ -174,10 +192,14 @@ public class InventoryModel implements Modellable {
 	@Override
 	public void deleteItem(String itemID){
 
-		CDList.remove(itemID);
-		DVDList.remove(itemID);
-		bookList.remove(itemID);
-		inventory.remove(itemID);
+		if (itemID != null){
+			CDList.remove(itemID);
+			DVDList.remove(itemID);
+			bookList.remove(itemID);
+			inventory.remove(itemID);
+		}
+		else 
+			System.out.println("deleteItem(String itemID) reference is null.");
 		
 	}
 
@@ -194,15 +216,17 @@ public class InventoryModel implements Modellable {
 	}
 	
 	private void searchItemHelper(String query) {
+		
 		String temp = null;
 		String value;
 		
+		//To enable search based on ID or word phrase.
 		if (!query.equals("")){
 			if (Utility.isNumeric(query)){
 				while (true){
 					temp = CDList.getProperty(query);
 					if (temp != null){
-						String[] parts = temp.split("---");
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -214,7 +238,7 @@ public class InventoryModel implements Modellable {
 
 					temp = DVDList.getProperty(query);
 					if (temp != null){
-						String[] parts = temp.split("---");
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -226,7 +250,7 @@ public class InventoryModel implements Modellable {
 
 					temp = bookList.getProperty(query);
 					if (temp != null){
-						String[] parts = temp.split("---");
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -244,7 +268,7 @@ public class InventoryModel implements Modellable {
 				for (String key : CDList.stringPropertyNames()){
 					value = CDList.getProperty(key).toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split("---");
+						String[] parts = value.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -256,7 +280,7 @@ public class InventoryModel implements Modellable {
 				for (String key : DVDList.stringPropertyNames()){
 					value = DVDList.getProperty(key).toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split("---");
+						String[] parts = value.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -268,7 +292,7 @@ public class InventoryModel implements Modellable {
 				for (String key : bookList.stringPropertyNames()){
 					value = bookList.getProperty(key).toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split("---");
+						String[] parts = value.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -284,14 +308,24 @@ public class InventoryModel implements Modellable {
 
 	@Override
 	public void searchItemForEditing(String itemID) {
-		searchItemHelper(itemID);
-		view.update(UpdateType.EDIT);
+		
+		if (itemID != null){
+			searchItemHelper(itemID);
+			view.update(UpdateType.EDIT);
+		}
+		else 
+			System.out.println("searchItemForEditing(String itemID) reference is null.");
 	}
 
 	@Override
 	public String getItemQuantity(String itemID) {
 
-		return inventory.getProperty(itemID);
+		if (itemID != null)
+			return inventory.getProperty(itemID);
+		else{ 
+			System.out.println("getItemQuantity(String itemID) reference is null.");
+			return null;
+		}
 	}
 }
 

@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;
@@ -20,8 +20,4 @@ public interface Controllable {
 	public void deleteItem(String itemID);
 	
 	public void generateID(); 
-
-	
-
-
 }

@@ -1,6 +1,6 @@
 /**
  *
- * @author Ryan Liang
+ * @author Ryan L.
  */
 
 package com.ryanliang.inventorygui;
@@ -55,9 +55,4 @@ public class InventoryController implements Controllable {
 			model.generateID();
 			
 		}
-
-
-		
-
-		
 }
