@@ -27,11 +27,18 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.ryanliang.inventory.Controllable;
+import com.ryanliang.inventory.Modellable;
+
 @SuppressWarnings("serial")
 public class InventoryView extends JFrame implements Viewable{
 	
-	private static final Organizer contacts = new DayTimer();
-	private PersonDialog addPersonDialog = null;
+	private final Controllable controller;
+	private Modellable model;
+	
+	private static String itemID = "0";
+	
+	//private PersonDialog addPersonDialog = null;
 	
 	private static final JMenuBar menuBar = new JMenuBar();
 	private static final JMenu fileMenu = new JMenu("File");
@@ -76,8 +83,9 @@ public class InventoryView extends JFrame implements Viewable{
 	private int tableRowNum = 0;
 	private boolean tableRowSelected = false; 
 	
-	public InventoryView(){
-		super("Address Book");
+	public InventoryView(Controllable controller) {
+		super("Media inventory system");
+		this.controller = controller;
 					
 		fileMenu.add(openFileMenu);
 		fileMenu.addSeparator();
@@ -139,39 +147,18 @@ public class InventoryView extends JFrame implements Viewable{
 
 	private void editContact() {
 		
-		if (tableRowSelected){				
-			String email = table.getValueAt(tableRowNum, 2).toString();
-			Person pp = contacts.findByEmail(email);
-			
-			dialog(pp);		
-			if (addPersonDialog.getDone() == true){	
-				Person pp2 = addPersonDialog.getPerson();
-				
-				if (!email.equals(pp2.getEmailAddress()))
-					contacts.remove(email);
-							
-				tableRowSelected = false;
-				displayContacts(); 
-			}
-		}
+
 	}
 
 	private void deleteContact() {
 		
-		if (tableRowSelected){
-			contacts.remove(table.getValueAt(tableRowNum, 2).toString());
-			totalContact = contacts.getSize();
-			displayContacts(); 
-			tableRowSelected = false;
-		}
+
 	}
 
 	private void newContact() {
 
-		dialog(new Person());
-		displayContacts(); 
 	}
-	
+/*	
 	private void dialog(Person p) {
 		
 		if (addPersonDialog == null)
@@ -189,68 +176,16 @@ public class InventoryView extends JFrame implements Viewable{
 
 		}		
 	}
-	private void generateSampleContacts(int total) {
-		
-		//Note for future improvement: generate random data (characters, etc..) instead of below static data. 
-		String fname = "ppp";
-		String lname = "mmm";
-		String email = "eee";
-		String number = "111-222-3333";
-		LocalDate bd = null;
-		
-		for (int ii=0; ii<total; ii++){ 
-			contacts.add(new Person(fname+ii, lname+ii, email+ii+"@gmail.com", number, bd));
-		}
-/*		
-		contacts.add(new Person("ella", "kid", "ccc@gmail.com", "555-333-5555", LocalDate.of(2005, Month.JULY, 30)));
-		contacts.add(new Person("ryan", "wave", "12345@gmail.com", "555-333-8888", LocalDate.of(1942, Month.MAY, 12)));
-		contacts.add(new Person("vivian", "wave", "bbb2@gmail.com", "555-333-9999", LocalDate.of(2015, Month.DECEMBER, 15)));
-*/		
-		//totalContact = contacts.getSize();
-		displayContacts(); 
-	}
+*/
 
 	private void displayContacts() {
-		//Remove old table from frame
-		if (scrollPane != null)
-			remove(scrollPane);
-		
-		table = new JTable(new PropertiesTableModel(contacts.getSortedListByFirstName())); 
-       table.getSelectionModel().addListSelectionListener(new RowListener());
-       table.getColumnModel().getSelectionModel().addListSelectionListener(new ColumnListener());
-       table.setAutoCreateRowSorter(true);
-		scrollPane = new JScrollPane(table);
-		add(scrollPane);
-		
-		//Show total number of contacts on status bar
-		totalContact = contacts.getSize();
-		totalContactsStatus.setText(String.valueOf(totalContact));
-		statusPanel.setPreferredSize(new Dimension(getWidth(), 25));
-		statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-		totalContactsLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		totalContactsStatus.setHorizontalAlignment(SwingConstants.LEFT);
+
 		
 		//Refresh frame components in case table contents are changed.
 		validate();
 	}
-   private class RowListener implements ListSelectionListener {
-       public void valueChanged(ListSelectionEvent event) {
-           if (event.getValueIsAdjusting()) {
-               return;
-           }
-           
-           tableRowNum = table.getSelectedRow();
-           tableRowSelected = true;
-       }
-   }
 
-   private class ColumnListener implements ListSelectionListener {
-       public void valueChanged(ListSelectionEvent event) {
-           if (event.getValueIsAdjusting()) {
-               return;
-           }
-       }
-   }
+/*
 	public static void main(String[] args) {
 		
 		AddressBook app = new AddressBook();
@@ -267,5 +202,25 @@ public class InventoryView extends JFrame implements Viewable{
 		app.setVisible(true);
 
 	}
+*/
+
+	@Override
+	public void setModel(Modellable model) {
+		this.model = model;
+
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void update(UpdateType ut) {
+		// TODO Auto-generated method stub
+
+	}
+
 
 }

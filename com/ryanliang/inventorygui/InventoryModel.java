@@ -165,7 +165,7 @@ public class InventoryModel implements Modellable {
 			e.printStackTrace();
 		}
 	}
-
+	@Override
 	public void setView(Viewable view) {
 
 		this.view = view;
