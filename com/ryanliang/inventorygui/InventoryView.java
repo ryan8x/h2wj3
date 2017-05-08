@@ -236,7 +236,7 @@ public class InventoryView extends JFrame implements Viewable{
 			for (Media mm : result){
 				
 				System.out.println("Quantity: " + model.getItemQuantity(mm.getID()) + "\n");
-				
+/*				
 				JLabel IDLabel = new JLabel("Item ID:  ");
 				JLabel IDLabelValue = new JLabel(mm.getID());
 				JLabel titleLabel = new JLabel("Title:  ");
@@ -254,7 +254,14 @@ public class InventoryView extends JFrame implements Viewable{
 				genreLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
 				descriptionLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 				descriptionLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
-
+*/				
+				JLabel itemLabel = new JLabel("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
+											+  "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
+											+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
+											+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
+				
+				add(itemLabel);
+/*
 				JPanel panel1 = new JPanel();
 				GridLayout layout = new GridLayout(0,2);
 
@@ -269,7 +276,7 @@ public class InventoryView extends JFrame implements Viewable{
 				panel1.add(genreLabelValue);
 				panel1.add(descriptionLabel);
 				panel1.add(descriptionLabelValue);
-				
+*/				
 				validate();
 			}
 		}
