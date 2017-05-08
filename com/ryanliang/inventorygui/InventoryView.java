@@ -7,6 +7,8 @@ package com.ryanliang.inventorygui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.TextField;
 import java.awt.Toolkit;
 import java.time.LocalDate;
 
@@ -21,6 +23,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
@@ -132,18 +135,27 @@ public class InventoryView extends JFrame implements Viewable{
 			openDialog.showOpenDialog(null);
 		});
 		
-		exitFileMenu.addActionListener(event -> System.exit(0));
+		exitFileMenu.addActionListener(event -> {
+			controller.saveData();	
+			System.exit(0);
+		});
 	
 		newEditMenu.addActionListener(event -> newContact());
 		newToolBarButton.addActionListener(event -> newContact());
+		findToolBarButton.addActionListener(event -> searchItem());
 		deleteToolBarButton.addActionListener(event -> deleteContact());
 		editToolBarButton.addActionListener(event -> editContact());
       
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
+	private void searchItem() {
+		String query = "0";
+		controller.searchItem(query);
+	}
+
 	private void editContact() {
-		
+
 
 	}
 
@@ -153,6 +165,14 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void newContact() {
+		String itemID = "0";
+		String title = "test1";
+		String description = "abc";
+		String genre = "www";
+		String artist = "me";
+		String quantity = "22";
+		
+		controller.addItem(new CD(itemID, title, description , genre, artist), quantity);
 
 	}
 /*	
@@ -176,13 +196,8 @@ public class InventoryView extends JFrame implements Viewable{
 */
 
 	private void displayContacts() {
-		scrollPane = new JScrollPane();
-/*		for (int ii=0; ii < 100; ii++){
-			scrollPane.add(new JLabel("test" + ii));
-		}
-*/
-		scrollPane.add(new JLabel("test"));
-		add(scrollPane);
+
+
 
 		//Refresh frame components in case table contents are changed.
 		validate();
@@ -196,6 +211,8 @@ public class InventoryView extends JFrame implements Viewable{
 
 	@Override
 	public void start() {
+		controller.loadData();
+		
 		Toolkit kit = Toolkit.getDefaultToolkit();
 		Dimension screenSize = kit.getScreenSize();
 		int screenWidth = (int) (screenSize.width*0.8);
@@ -211,7 +228,51 @@ public class InventoryView extends JFrame implements Viewable{
 
 	@Override
 	public void update(UpdateType ut) {
-		// TODO Auto-generated method stub
+		if (ut == UpdateType.SEARCH_RESULT){
+			Media [] result = model.getSearchResult();
+			
+			System.out.println(result.length > 0?"":"No match found");
+			System.out.println();
+			for (Media mm : result){
+				
+				System.out.println("Quantity: " + model.getItemQuantity(mm.getID()) + "\n");
+				
+				JLabel IDLabel = new JLabel("Item ID:  ");
+				JLabel IDLabelValue = new JLabel(mm.getID());
+				JLabel titleLabel = new JLabel("Title:  ");
+				JLabel titleLabelValue = new JLabel("<html>" + mm.getTitle() + " </html>");
+				JLabel genreLabel = new JLabel("Genre:  ");
+				JLabel genreLabelValue = new JLabel(mm.getGenre());
+				JLabel descriptionLabel = new JLabel("Description:  ");
+				JLabel descriptionLabelValue = new JLabel("<html>" + mm.getDescription() + " </html>");
+				
+				IDLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+				IDLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
+				titleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+				titleLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
+				genreLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+				genreLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
+				descriptionLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+				descriptionLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
+
+				JPanel panel1 = new JPanel();
+				GridLayout layout = new GridLayout(0,2);
+
+				
+				add(panel1);
+				panel1.setLayout(layout);
+				panel1.add(IDLabel);
+				panel1.add(IDLabelValue);
+				panel1.add(titleLabel);
+				panel1.add(titleLabelValue);
+				panel1.add(genreLabel);
+				panel1.add(genreLabelValue);
+				panel1.add(descriptionLabel);
+				panel1.add(descriptionLabelValue);
+				
+				validate();
+			}
+		}
 
 	}
 
