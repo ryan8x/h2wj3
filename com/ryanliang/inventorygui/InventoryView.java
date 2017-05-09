@@ -38,7 +38,7 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private static String itemID = "0";
 	
-	//private PersonDialog addPersonDialog = null;
+	private ItemDialog addItemDialog = null;
 	
 	private static final JMenuBar menuBar = new JMenuBar();
 	private static final JMenu fileMenu = new JMenu("File");
@@ -75,6 +75,7 @@ public class InventoryView extends JFrame implements Viewable{
 	private JTable table = null;
 	private JScrollPane scrollPane = null;
 	
+	private static final JPanel westPanel = new JPanel();
 	private static final JPanel statusPanel = new JPanel();
 	private static final JLabel totalContactsLabel = new JLabel("Total Contacts: ");
 	private JLabel totalContactsStatus = new JLabel("");
@@ -122,7 +123,10 @@ public class InventoryView extends JFrame implements Viewable{
 		toolBar.add(nextToolBarButton);
 		toolBar.add(lastToolBarButton);
 		add(toolBar, BorderLayout.NORTH);
-
+		
+		add(westPanel, BorderLayout.WEST);
+		westPanel.add(new JLabel("      "));
+		
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
 		add(statusPanel, BorderLayout.SOUTH);
 
@@ -140,8 +144,8 @@ public class InventoryView extends JFrame implements Viewable{
 			System.exit(0);
 		});
 	
-		newEditMenu.addActionListener(event -> newContact());
-		newToolBarButton.addActionListener(event -> newContact());
+		newEditMenu.addActionListener(event -> newItem());
+		newToolBarButton.addActionListener(event -> newItem());
 		findToolBarButton.addActionListener(event -> searchItem());
 		deleteToolBarButton.addActionListener(event -> deleteContact());
 		editToolBarButton.addActionListener(event -> editContact());
@@ -164,36 +168,40 @@ public class InventoryView extends JFrame implements Viewable{
 
 	}
 
-	private void newContact() {
+	private void newItem() {
+		/*
 		String itemID = "0";
 		String title = "test1";
 		String description = "abc";
 		String genre = "www";
 		String artist = "me";
 		String quantity = "22";
+		*/
+		//controller.addItem(new CD(itemID, title, description , genre, artist), quantity);
 		
-		controller.addItem(new CD(itemID, title, description , genre, artist), quantity);
-
+		controller.generateID();
+		dialog(new CD(itemID, "", "", "", ""));
 	}
-/*	
-	private void dialog(Person p) {
+	
+	private void dialog(Media m) {
 		
-		if (addPersonDialog == null)
-			addPersonDialog = new PersonDialog(this);
+		if (addItemDialog == null)
+			addItemDialog = new ItemDialog(this);
 		
-		addPersonDialog.initializeTextFields(p);
-		addPersonDialog.setLocationRelativeTo(this);
-		addPersonDialog.setDone(false);
-		addPersonDialog.setVisible(true);
+		addItemDialog.initializeTextFields(m);
+		addItemDialog.setLocationRelativeTo(this);
+		addItemDialog.setDone(false);
+		addItemDialog.setVisible(true);
 		
-		if (addPersonDialog.getDone() == true){			
-			contacts.add(addPersonDialog.getPerson());
+		if (addItemDialog.getDone() == true){
+			Media newItem = addItemDialog.getItem();
 			
-			//totalContact = contacts.getSize();
-
+			if (newItem instanceof CD){  
+				controller.addItem(newItem, addItemDialog.getQuantity());
+			}
 		}		
 	}
-*/
+
 
 	private void displayContacts() {
 
@@ -236,49 +244,20 @@ public class InventoryView extends JFrame implements Viewable{
 			for (Media mm : result){
 				
 				System.out.println("Quantity: " + model.getItemQuantity(mm.getID()) + "\n");
-/*				
-				JLabel IDLabel = new JLabel("Item ID:  ");
-				JLabel IDLabelValue = new JLabel(mm.getID());
-				JLabel titleLabel = new JLabel("Title:  ");
-				JLabel titleLabelValue = new JLabel("<html>" + mm.getTitle() + " </html>");
-				JLabel genreLabel = new JLabel("Genre:  ");
-				JLabel genreLabelValue = new JLabel(mm.getGenre());
-				JLabel descriptionLabel = new JLabel("Description:  ");
-				JLabel descriptionLabelValue = new JLabel("<html>" + mm.getDescription() + " </html>");
-				
-				IDLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				IDLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
-				titleLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				titleLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
-				genreLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				genreLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
-				descriptionLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				descriptionLabelValue.setHorizontalAlignment(SwingConstants.LEFT);
-*/				
+			
 				JLabel itemLabel = new JLabel("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
 											+  "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
 											+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
 											+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
 				
-				add(itemLabel);
-/*
-				JPanel panel1 = new JPanel();
-				GridLayout layout = new GridLayout(0,2);
-
 				
-				add(panel1);
-				panel1.setLayout(layout);
-				panel1.add(IDLabel);
-				panel1.add(IDLabelValue);
-				panel1.add(titleLabel);
-				panel1.add(titleLabelValue);
-				panel1.add(genreLabel);
-				panel1.add(genreLabelValue);
-				panel1.add(descriptionLabel);
-				panel1.add(descriptionLabelValue);
-*/				
+				add(itemLabel);
+			
 				validate();
 			}
+		}
+		else if (ut == UpdateType.ID){
+			itemID = model.getID();
 		}
 
 	}
