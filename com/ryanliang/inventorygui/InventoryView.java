@@ -39,7 +39,7 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private static String itemID = "0";
 	
-	private ItemDialog addItemDialog = null;
+	private ItemDialog itemDialog = null;
 	
 	private static final JMenuBar menuBar = new JMenuBar();
 	private static final JMenu fileMenu = new JMenu("File");
@@ -84,6 +84,8 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private int tableRowNum = 0;
 	private boolean tableRowSelected = false; 
+	
+	private JLabel itemDetails = new JLabel("");
 	
 	public InventoryView(Controllable controller) {
 		super("Media inventory system");
@@ -134,6 +136,7 @@ public class InventoryView extends JFrame implements Viewable{
 		statusPanel.add(totalContactsLabel);
 		statusPanel.add(totalContactsStatus);
 
+		add(itemDetails);
 		
 		openFileMenu.addActionListener((event) -> {
 			JFileChooser openDialog = new JFileChooser();
@@ -155,8 +158,8 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void searchItem() {
-		String query = "0";
-		controller.searchItem(query);
+		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
+		controller.searchItem(input);
 	}
 
 	private void editItem() {
@@ -174,26 +177,26 @@ public class InventoryView extends JFrame implements Viewable{
 	private void newItem() {
 		
 		controller.generateID();
-		dialog(new CD(itemID, "", "", "", ""), "");
+		openItemDialog(new CD(itemID, "", "", "", ""), "");
+		
+		if (itemDialog.getDone() == true){
+			Media item = itemDialog.getItem();
+			
+			if (item instanceof CD){  
+				controller.addItem(item, itemDialog.getQuantity());
+			}
+		}	
 	}
 	
-	private void dialog(Media m, String quantity) {
+	private void openItemDialog(Media m, String quantity) {
 		
-		if (addItemDialog == null)
-			addItemDialog = new ItemDialog(this);
+		if (itemDialog == null)
+			itemDialog = new ItemDialog(this);
 		
-		addItemDialog.initializeTextFields(m, quantity);
-		addItemDialog.setLocationRelativeTo(this);
-		addItemDialog.setDone(false);
-		addItemDialog.setVisible(true);
-		
-		if (addItemDialog.getDone() == true){
-			Media newItem = addItemDialog.getItem();
-			
-			if (newItem instanceof CD){  
-				controller.addItem(newItem, addItemDialog.getQuantity());
-			}
-		}		
+		itemDialog.initializeTextFields(m, quantity);
+		itemDialog.setLocationRelativeTo(this);
+		itemDialog.setDone(false);
+		itemDialog.setVisible(true);
 	}
 
 
@@ -224,7 +227,7 @@ public class InventoryView extends JFrame implements Viewable{
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 		
-		displayContacts();
+		//displayContacts();
 
 	}
 
@@ -233,45 +236,43 @@ public class InventoryView extends JFrame implements Viewable{
 		if (ut == UpdateType.SEARCH_RESULT){
 			Media [] result = model.getSearchResult();
 			
-			System.out.println(result.length > 0?"":"No match found");
-			System.out.println();
-			for (Media mm : result){
-				
-				System.out.println("Quantity: " + model.getItemQuantity(mm.getID()) + "\n");
-			
-				JLabel itemLabel = new JLabel("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
-											+  "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
-											+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
-											+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
-				
-				
-				add(itemLabel);
-			
-				validate();
+			if (result.length < 1)
+				JOptionPane.showMessageDialog(null, "Item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
+			else{
+				for (Media mm : result){
+					
+					//****More code is needed for multiple search results (items)!!	****
+					
+					itemDetails.setText("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
+							+ "<h3><font color=blue>Quantity</font></h3>" + model.getItemQuantity(mm.getID()) + "<br>"
+							+ "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
+							+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
+							+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
+
+					validate();
+				}
 			}
 		}
 		else if (ut == UpdateType.EDIT){
 			Media [] result = model.getSearchResult();
 			
 			if (result.length < 1)
-				JOptionPane.showMessageDialog(null, "item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
+				JOptionPane.showMessageDialog(null, "Item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
 			else{
 				for (Media mm : result){
 
 					if (mm instanceof CD){	
 						
-						dialog(mm, "");		
-						if (addItemDialog.getDone() == true){	
-							CD tempCD = (CD) addItemDialog.getItem();
+						openItemDialog(mm, model.getItemQuantity(mm.getID()));		
+						if (itemDialog.getDone() == true){	
+							CD item = (CD) itemDialog.getItem();
 
-							//displayContacts(); 
-
-							String title = tempCD.getTitle();
-							String quantity = addItemDialog.getQuantity();
-							String genre = tempCD.getGenre();
-							String description = tempCD.getDescription();
-							String artist = tempCD.getArtist();
-
+							String title = item.getTitle();
+							String quantity = itemDialog.getQuantity();
+							String genre = item.getGenre();
+							String description = item.getDescription();
+							String artist = item.getArtist();
+/*
 							if (title.equals(""))
 								title = ((CD) mm).getTitle();
 							if (genre.equals(""))
@@ -280,7 +281,7 @@ public class InventoryView extends JFrame implements Viewable{
 								description = ((CD) mm).getDescription();
 							if (artist.equals(""))
 								artist = ((CD) mm).getArtist();
-
+*/
 							controller.editItem(new CD(((CD) mm).getID(), title, description , genre, artist), quantity); 
 						}
 					}
