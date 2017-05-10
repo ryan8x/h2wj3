@@ -120,7 +120,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		return done;
 	}
 
-	public void initializeTextFields(Media m) {
+	public void initializeTextFields(Media m, String quantity) {
 		itemID = m.getID();
 		
 		errorLabel.setText("");
@@ -130,6 +130,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 			genreField.setText(m.getGenre());
 			artistField.setText(((CD) m).getArtist());
 			descriptionField.setText(m.getDescription());
+			quantityField.setText(quantity);
 		}
 
 	}

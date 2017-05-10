@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -147,8 +148,8 @@ public class InventoryView extends JFrame implements Viewable{
 		newEditMenu.addActionListener(event -> newItem());
 		newToolBarButton.addActionListener(event -> newItem());
 		findToolBarButton.addActionListener(event -> searchItem());
-		deleteToolBarButton.addActionListener(event -> deleteContact());
-		editToolBarButton.addActionListener(event -> editContact());
+		deleteToolBarButton.addActionListener(event -> deleteItem());
+		editToolBarButton.addActionListener(event -> editItem());
       
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
@@ -158,37 +159,30 @@ public class InventoryView extends JFrame implements Viewable{
 		controller.searchItem(query);
 	}
 
-	private void editContact() {
+	private void editItem() {
 
-
+		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
+		controller.searchItemForEditing(input);
 	}
 
-	private void deleteContact() {
+	private void deleteItem() {
 		
-
+		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
+		controller.deleteItem(input);
 	}
 
 	private void newItem() {
-		/*
-		String itemID = "0";
-		String title = "test1";
-		String description = "abc";
-		String genre = "www";
-		String artist = "me";
-		String quantity = "22";
-		*/
-		//controller.addItem(new CD(itemID, title, description , genre, artist), quantity);
 		
 		controller.generateID();
-		dialog(new CD(itemID, "", "", "", ""));
+		dialog(new CD(itemID, "", "", "", ""), "");
 	}
 	
-	private void dialog(Media m) {
+	private void dialog(Media m, String quantity) {
 		
 		if (addItemDialog == null)
 			addItemDialog = new ItemDialog(this);
 		
-		addItemDialog.initializeTextFields(m);
+		addItemDialog.initializeTextFields(m, quantity);
 		addItemDialog.setLocationRelativeTo(this);
 		addItemDialog.setDone(false);
 		addItemDialog.setVisible(true);
@@ -254,6 +248,80 @@ public class InventoryView extends JFrame implements Viewable{
 				add(itemLabel);
 			
 				validate();
+			}
+		}
+		else if (ut == UpdateType.EDIT){
+			Media [] result = model.getSearchResult();
+			
+			if (result.length < 1)
+				JOptionPane.showMessageDialog(null, "item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
+			else{
+				for (Media mm : result){
+
+					if (mm instanceof CD){	
+						
+						dialog(mm, "");		
+						if (addItemDialog.getDone() == true){	
+							CD tempCD = (CD) addItemDialog.getItem();
+
+							//displayContacts(); 
+
+							String title = tempCD.getTitle();
+							String quantity = addItemDialog.getQuantity();
+							String genre = tempCD.getGenre();
+							String description = tempCD.getDescription();
+							String artist = tempCD.getArtist();
+
+							if (title.equals(""))
+								title = ((CD) mm).getTitle();
+							if (genre.equals(""))
+								genre = ((CD) mm).getGenre();
+							if (description.equals(""))
+								description = ((CD) mm).getDescription();
+							if (artist.equals(""))
+								artist = ((CD) mm).getArtist();
+
+							controller.editItem(new CD(((CD) mm).getID(), title, description , genre, artist), quantity); 
+						}
+					}
+/*					else if (mm instanceof DVD){				
+						System.out.println("Cast(s): ");
+						String cast = sc.nextLine().trim();
+						System.out.println();
+
+						if (title.equals(""))
+							title = ((DVD) mm).getTitle();
+						if (genre.equals(""))
+							genre = ((DVD) mm).getGenre();
+						if (description.equals(""))
+							description = ((DVD) mm).getDescription();
+						if (cast.equals(""))
+							cast = ((DVD) mm).getCast();
+
+						controller.editItem(new DVD(((DVD) mm).getID(), title, description , genre, cast), quantity); 
+					}
+					else if (mm instanceof Book){				
+						System.out.println("Author: ");
+						String author = sc.nextLine().trim();
+						System.out.println("ISBN: ");
+						String ISBN = sc.nextLine().trim();
+						System.out.println();
+
+						if (title.equals(""))
+							title = ((Book) mm).getTitle();
+						if (genre.equals(""))
+							genre = ((Book) mm).getGenre();
+						if (description.equals(""))
+							description = ((Book) mm).getDescription();
+						if (author.equals(""))
+							author = ((Book) mm).getAuthor();
+						if (ISBN.equals(""))
+							ISBN = ((Book) mm).getISBN();
+
+						controller.editItem(new Book(((Book) mm).getID(), title, description , genre, author, ISBN), quantity); 
+					}
+*/					
+				}
 			}
 		}
 		else if (ut == UpdateType.ID){
