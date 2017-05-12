@@ -175,9 +175,10 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void newItem() {
-		
+		Media temp = null;
 		controller.generateID();
-		openItemDialog(new CD(itemID, "", "", "", ""), "");
+		//openItemDialog(new CD(itemID, "", "", "", ""), "");
+		openItemDialog(temp, "");
 		
 		if (itemDialog.getDone() == true){
 			Media item = itemDialog.getItem();
@@ -193,10 +194,17 @@ public class InventoryView extends JFrame implements Viewable{
 		if (itemDialog == null)
 			itemDialog = new ItemDialog(this);
 		
-		itemDialog.initializeTextFields(m, quantity);
+		if (m == null){
+			itemDialog.resetRadioButtonGroup();
+			itemDialog.inputItemDetails();
+		}
+		else{
+			itemDialog.initializeTextFields(m, quantity);
+		}
 		itemDialog.setLocationRelativeTo(this);
 		itemDialog.setDone(false);
 		itemDialog.setVisible(true);
+		
 	}
 
 
