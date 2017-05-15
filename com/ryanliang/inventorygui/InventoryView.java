@@ -274,62 +274,51 @@ public class InventoryView extends JFrame implements Viewable{
 						openItemDialog(mm, model.getItemQuantity(mm.getID()));		
 						if (itemDialog.getDone() == true){	
 							CD item = (CD) itemDialog.getItem();
-
+							
+							String ID = item.getID();
 							String title = item.getTitle();
 							String quantity = itemDialog.getQuantity();
 							String genre = item.getGenre();
 							String description = item.getDescription();
 							String artist = item.getArtist();
-/*
-							if (title.equals(""))
-								title = ((CD) mm).getTitle();
-							if (genre.equals(""))
-								genre = ((CD) mm).getGenre();
-							if (description.equals(""))
-								description = ((CD) mm).getDescription();
-							if (artist.equals(""))
-								artist = ((CD) mm).getArtist();
-*/
-							controller.editItem(new CD(((CD) mm).getID(), title, description , genre, artist), quantity); 
+
+							controller.editItem(new CD(ID, title, description , genre, artist), quantity); 
 						}
 					}
-/*					else if (mm instanceof DVD){				
-						System.out.println("Cast(s): ");
-						String cast = sc.nextLine().trim();
-						System.out.println();
+					else if (mm instanceof DVD){	
+						
+						openItemDialog(mm, model.getItemQuantity(mm.getID()));		
+						if (itemDialog.getDone() == true){	
+							DVD item = (DVD) itemDialog.getItem();
 
-						if (title.equals(""))
-							title = ((DVD) mm).getTitle();
-						if (genre.equals(""))
-							genre = ((DVD) mm).getGenre();
-						if (description.equals(""))
-							description = ((DVD) mm).getDescription();
-						if (cast.equals(""))
-							cast = ((DVD) mm).getCast();
+							String ID = item.getID();
+							String title = item.getTitle();
+							String quantity = itemDialog.getQuantity();
+							String genre = item.getGenre();
+							String description = item.getDescription();
+							String cast = item.getCast();
 
-						controller.editItem(new DVD(((DVD) mm).getID(), title, description , genre, cast), quantity); 
+							controller.editItem(new DVD(ID, title, description , genre, cast), quantity); 
+						}
 					}
-					else if (mm instanceof Book){				
-						System.out.println("Author: ");
-						String author = sc.nextLine().trim();
-						System.out.println("ISBN: ");
-						String ISBN = sc.nextLine().trim();
-						System.out.println();
+					else if (mm instanceof Book){	
+						
+						openItemDialog(mm, model.getItemQuantity(mm.getID()));		
+						if (itemDialog.getDone() == true){	
+							Book item = (Book) itemDialog.getItem();
 
-						if (title.equals(""))
-							title = ((Book) mm).getTitle();
-						if (genre.equals(""))
-							genre = ((Book) mm).getGenre();
-						if (description.equals(""))
-							description = ((Book) mm).getDescription();
-						if (author.equals(""))
-							author = ((Book) mm).getAuthor();
-						if (ISBN.equals(""))
-							ISBN = ((Book) mm).getISBN();
+							String ID = item.getID();
+							String title = item.getTitle();
+							String quantity = itemDialog.getQuantity();
+							String genre = item.getGenre();
+							String description = item.getDescription();
+							String author = item.getAuthor();
+							String ISBN = item.getISBN();
 
-						controller.editItem(new Book(((Book) mm).getID(), title, description , genre, author, ISBN), quantity); 
+							controller.editItem(new Book(ID, title, description , genre, author, ISBN), quantity); 
+						}
 					}
-*/					
+				
 				}
 			}
 		}

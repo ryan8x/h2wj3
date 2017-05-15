@@ -12,9 +12,9 @@ public abstract class Media {
 	private String description;
 	private String genre;
 
-	public Media(String iD, String title, String description, String genre) {
+	public Media(String ID, String title, String description, String genre) {
 		super();
-		ID = iD;
+		this.ID = ID;
 		this.title = title;
 		this.description = description;
 		this.genre = genre;
