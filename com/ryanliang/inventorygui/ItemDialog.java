@@ -5,6 +5,7 @@
 
 package com.ryanliang.inventorygui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -47,14 +48,23 @@ public class ItemDialog extends JDialog implements ActionListener{
 	private JTextField bookISBNField = new JTextField(20);
 	private JTextField bookDescriptionField = new JTextField(20);
 	private JTextField bookQuantityField = new JTextField(20);
-	
+		
 	private static final JButton doneButton = new JButton("Done"); 
+	
+	private static final JPanel CDMainPanel = new JPanel(new BorderLayout());
+	private static final JPanel DVDMainPanel = new JPanel(new BorderLayout());
+	private static final JPanel bookMainPanel = new JPanel(new BorderLayout());
+	
 	private static final JPanel radioButtonPanel = new JPanel();
 	private static final JPanel CDTextFieldPanel = new JPanel();
 	private static final JPanel DVDTextFieldPanel = new JPanel();
 	private static final JPanel bookTextFieldPanel = new JPanel();
 	private static final JPanel errorPanel = new JPanel();
 	private static final JPanel buttonPanel = new JPanel();
+	
+	private static final JPanel CDLabelPanel = new JPanel();
+	private static final JPanel DVDLabelPanel = new JPanel();
+	private static final JPanel bookLabelPanel = new JPanel();
 	
 	private static final ButtonGroup radioGroup = new ButtonGroup();
 	private static final JRadioButton CDRadioButton = new JRadioButton("CD", false);
@@ -69,11 +79,11 @@ public class ItemDialog extends JDialog implements ActionListener{
 
 		Dimension frameSize = frame.getSize();
 		int frameWidth = frameSize.width;
-		int frameHeight = frameSize.height;
-		setSize(frameWidth/3,frameHeight/3);
+		int frameHeight = frameSize.height + 250;
+		setSize(frameWidth/3,frameHeight/2);
 
 		setLayout(new GridLayout(4, 1));
-		GridLayout textFieldLayout = new GridLayout(0,2);
+		GridLayout textFieldLayout = new GridLayout(0,1);
 
 		radioGroup.add(CDRadioButton);
 		radioGroup.add(DVDRadioButton);
@@ -83,7 +93,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		radioButtonPanel.add(bookRadioButton);
 		
 		CDRadioButton.addActionListener(event -> {
-			addJPanel(CDTextFieldPanel);
+			addJPanel(CDMainPanel);
 			media = MediaCategory.CD;
 			
 			CDTitleField.setText("");
@@ -94,7 +104,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		});
 		
 		DVDRadioButton.addActionListener(event -> {
-			addJPanel(DVDTextFieldPanel);
+			addJPanel(DVDMainPanel);
 			media = MediaCategory.DVD;
 			
 			DVDTitleField.setText("");
@@ -105,7 +115,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		});
 		
 		bookRadioButton.addActionListener(event -> {
-			addJPanel(bookTextFieldPanel);
+			addJPanel(bookMainPanel);
 			media = MediaCategory.BOOK;
 			
 			bookTitleField.setText("");
@@ -123,49 +133,63 @@ public class ItemDialog extends JDialog implements ActionListener{
 		doneButton.setAlignmentX(CENTER_ALIGNMENT);
 
 		CDTextFieldPanel.setLayout(textFieldLayout);
+		CDLabelPanel.setLayout(textFieldLayout);
+		
 		DVDTextFieldPanel.setLayout(textFieldLayout);
+		DVDLabelPanel.setLayout(textFieldLayout);
+		
 		bookTextFieldPanel.setLayout(textFieldLayout);
+		bookLabelPanel.setLayout(textFieldLayout);
 
-
-		CDTextFieldPanel.add(new JLabel("Title:"));
+		CDMainPanel.add(CDLabelPanel, BorderLayout.WEST);
+		CDMainPanel.add(CDTextFieldPanel, BorderLayout.CENTER);
+		DVDMainPanel.add(DVDLabelPanel, BorderLayout.WEST);
+		DVDMainPanel.add(DVDTextFieldPanel, BorderLayout.CENTER);
+		bookMainPanel.add(bookLabelPanel, BorderLayout.WEST);
+		bookMainPanel.add(bookTextFieldPanel, BorderLayout.CENTER);
+		
 		CDTextFieldPanel.add(CDTitleField);
-		CDTextFieldPanel.add(new JLabel("Artist(s):"));
 		CDTextFieldPanel.add(CDArtistField);
-		CDTextFieldPanel.add(new JLabel("Genre:"));
 		CDTextFieldPanel.add(CDGenreField);
-		CDTextFieldPanel.add(new JLabel("Description:"));
 		CDTextFieldPanel.add(CDDescriptionField);
-		CDTextFieldPanel.add(new JLabel("Quantity:"));
 		CDTextFieldPanel.add(CDQuantityField);
+		
+		CDLabelPanel.add(new JLabel("Title:"));
+		CDLabelPanel.add(new JLabel("Artist(s):"));
+		CDLabelPanel.add(new JLabel("Genre:"));
+		CDLabelPanel.add(new JLabel("Description:"));
+		CDLabelPanel.add(new JLabel("Quantity:"));
 
-		DVDTextFieldPanel.add(new JLabel("Title:"));
 		DVDTextFieldPanel.add(DVDTitleField);
-		DVDTextFieldPanel.add(new JLabel("Cast(s):"));
 		DVDTextFieldPanel.add(DVDCastField);
-		DVDTextFieldPanel.add(new JLabel("Genre:"));
 		DVDTextFieldPanel.add(DVDGenreField);
-		DVDTextFieldPanel.add(new JLabel("Description:"));
 		DVDTextFieldPanel.add(DVDDescriptionField);
-		DVDTextFieldPanel.add(new JLabel("Quantity:"));
 		DVDTextFieldPanel.add(DVDQuantityField);
 		
-		bookTextFieldPanel.add(new JLabel("Title:"));
+		DVDLabelPanel.add(new JLabel("Title:"));
+		DVDLabelPanel.add(new JLabel("Cast(s):"));
+		DVDLabelPanel.add(new JLabel("Genre:"));
+		DVDLabelPanel.add(new JLabel("Description:"));
+		DVDLabelPanel.add(new JLabel("Quantity:"));
+		
 		bookTextFieldPanel.add(bookTitleField);
-		bookTextFieldPanel.add(new JLabel("Author(s):"));
 		bookTextFieldPanel.add(bookAuthorField);
-		bookTextFieldPanel.add(new JLabel("ISBN:"));
 		bookTextFieldPanel.add(bookISBNField);
-		bookTextFieldPanel.add(new JLabel("Genre:"));
 		bookTextFieldPanel.add(bookGenreField);
-		bookTextFieldPanel.add(new JLabel("Description:"));
 		bookTextFieldPanel.add(bookDescriptionField);
-		bookTextFieldPanel.add(new JLabel("Quantity:"));
 		bookTextFieldPanel.add(bookQuantityField);
+		
+		bookLabelPanel.add(new JLabel("Title:"));
+		bookLabelPanel.add(new JLabel("Author(s):"));
+		bookLabelPanel.add(new JLabel("ISBN:"));
+		bookLabelPanel.add(new JLabel("Genre:"));
+		bookLabelPanel.add(new JLabel("Description:"));
+		bookLabelPanel.add(new JLabel("Quantity:"));
 
 	}
 
 	private void addJPanel(JPanel panel) {
-		clearDialog();
+		removePanels();
 		
 		add(panel);
 		add(errorPanel);
@@ -197,7 +221,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 			else{
 				item = new CD(itemID, title, description, genre, artist);
 				
-				resetDialog();
+				resetSettings();
 			}
 		}
 		else if (media ==  MediaCategory.DVD){
@@ -215,7 +239,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 			else{
 				item = new DVD(itemID, title, description, genre, cast);
 				
-				resetDialog();
+				resetSettings();
 			}
 		}
 		else if (media ==  MediaCategory.BOOK){
@@ -234,12 +258,12 @@ public class ItemDialog extends JDialog implements ActionListener{
 			else{
 				item = new Book(itemID, title, description, genre, author, ISBN);
 				
-				resetDialog();
+				resetSettings();
 			}
 		}
 	}
 	
-	private void resetDialog() {
+	private void resetSettings() {
 		errorLabel.setText("");
 		done = true;
 		setVisible(false);
@@ -270,10 +294,10 @@ public class ItemDialog extends JDialog implements ActionListener{
 		errorLabel.setText("");
 		
 		remove(radioButtonPanel);
-		clearDialog();
+		removePanels();
 
 		if (m instanceof CD){   
-			add(CDTextFieldPanel);
+			add(CDMainPanel);
 			media = MediaCategory.CD;
 			
 			CDTitleField.setText(m.getTitle());
@@ -283,7 +307,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 			CDQuantityField.setText(quant);
 		}
 		else if (m instanceof DVD){   
-			add(DVDTextFieldPanel);
+			add(DVDMainPanel);
 			media = MediaCategory.DVD;
 			
 			DVDTitleField.setText(m.getTitle());
@@ -293,7 +317,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 			DVDQuantityField.setText(quant);
 		}
 		else if (m instanceof Book){   
-			add(bookTextFieldPanel);
+			add(bookMainPanel);
 			media = MediaCategory.BOOK;
 			
 			bookTitleField.setText(m.getTitle());
@@ -311,18 +335,19 @@ public class ItemDialog extends JDialog implements ActionListener{
 
 	public void inputItemDetails(String itemID) {
 		this.itemID = itemID;
+		errorLabel.setText("");
 		
 		remove(radioButtonPanel);
-		clearDialog();
+		removePanels();
 
 		add(radioButtonPanel);
 		
 	}
 
-	private void clearDialog() {
-		remove(CDTextFieldPanel);
-		remove(DVDTextFieldPanel);
-		remove(bookTextFieldPanel);
+	private void removePanels() {
+		remove(CDMainPanel);
+		remove(DVDMainPanel);
+		remove(bookMainPanel);
 
 		remove(errorPanel);
 		remove(buttonPanel);
