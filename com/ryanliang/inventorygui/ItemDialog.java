@@ -183,10 +183,10 @@ public class ItemDialog extends JDialog implements ActionListener{
 		errorLabel.setForeground(Color.RED);
 
 		if (media ==  MediaCategory.CD){
-			title = CDTitleField.getText().trim().toLowerCase();
-			genre = CDGenreField.getText().trim().toLowerCase();
-			description = CDDescriptionField.getText().trim().toLowerCase();
-			String artist = CDArtistField.getText().trim().toLowerCase();
+			title = CDTitleField.getText().trim();
+			genre = CDGenreField.getText().trim();
+			description = CDDescriptionField.getText().trim();
+			String artist = CDArtistField.getText().trim();
 			quantity = CDQuantityField.getText().trim().toLowerCase();
 
 			if (!Utility.isNumeric(quantity))
@@ -201,10 +201,10 @@ public class ItemDialog extends JDialog implements ActionListener{
 			}
 		}
 		else if (media ==  MediaCategory.DVD){
-			title = DVDTitleField.getText().trim().toLowerCase();
-			genre = DVDGenreField.getText().trim().toLowerCase();
-			description = DVDDescriptionField.getText().trim().toLowerCase();
-			String cast = DVDCastField.getText().trim().toLowerCase();
+			title = DVDTitleField.getText().trim();
+			genre = DVDGenreField.getText().trim();
+			description = DVDDescriptionField.getText();
+			String cast = DVDCastField.getText().trim();
 			quantity = DVDQuantityField.getText().trim().toLowerCase();
 
 			if (!Utility.isNumeric(quantity))
@@ -219,11 +219,11 @@ public class ItemDialog extends JDialog implements ActionListener{
 			}
 		}
 		else if (media ==  MediaCategory.BOOK){
-			title = bookTitleField.getText().trim().toLowerCase();
-			genre = bookGenreField.getText().trim().toLowerCase();
-			description = bookDescriptionField.getText().trim().toLowerCase();
-			String author = bookAuthorField.getText().trim().toLowerCase();
-			String ISBN = bookISBNField.getText().trim().toLowerCase();
+			title = bookTitleField.getText().trim();
+			genre = bookGenreField.getText().trim();
+			description = bookDescriptionField.getText().trim();
+			String author = bookAuthorField.getText().trim();
+			String ISBN = bookISBNField.getText().trim();
 			quantity = bookQuantityField.getText().trim().toLowerCase();
 
 			if (!Utility.isNumeric(quantity))
@@ -274,6 +274,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 
 		if (m instanceof CD){   
 			add(CDTextFieldPanel);
+			media = MediaCategory.CD;
 			
 			CDTitleField.setText(m.getTitle());
 			CDGenreField.setText(m.getGenre());
@@ -283,6 +284,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		}
 		else if (m instanceof DVD){   
 			add(DVDTextFieldPanel);
+			media = MediaCategory.DVD;
 			
 			DVDTitleField.setText(m.getTitle());
 			DVDGenreField.setText(m.getGenre());
@@ -292,6 +294,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		}
 		else if (m instanceof Book){   
 			add(bookTextFieldPanel);
+			media = MediaCategory.BOOK;
 			
 			bookTitleField.setText(m.getTitle());
 			bookGenreField.setText(m.getGenre());

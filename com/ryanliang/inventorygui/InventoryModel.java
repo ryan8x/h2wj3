@@ -46,24 +46,41 @@ public class InventoryModel implements Modellable {
 	}
 	
 	private void setData(Media media) {
+		
+		String none = "None";
+		
 		String ID = media.getID();
 		String title = media.getTitle();
 		String description = media.getDescription();
 		String genre = media.getGenre();
 		
+		title = title.trim().equals("")?none:title;
+		description = description.trim().equals("")?none:description;
+		genre = genre.trim().equals("")?none:genre;
+		
 		String value = title + delimiter + description + delimiter + genre + delimiter;
 		
 		if (media instanceof CD){
 			String artist = ((CD) media).getArtist();
+			
+			artist = artist.trim().equals("")?none:artist;
+			
 			CDList.setProperty(ID, value + artist);
 		}
 		else if (media instanceof DVD){
 			String cast = ((DVD) media).getCast();
+			
+			cast = cast.trim().equals("")?none:cast;
+			
 			DVDList.setProperty(ID, value + cast);
 		}
 		else if (media instanceof Book){
 			String author = ((Book) media).getAuthor();
 			String ISBN = ((Book) media).getISBN();
+			
+			author = author.trim().equals("")?none:author;
+			ISBN = ISBN.trim().equals("")?none:ISBN;
+			
 			bookList.setProperty(ID, value + author + delimiter + ISBN);
 		}
 		
