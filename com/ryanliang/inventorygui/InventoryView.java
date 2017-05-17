@@ -207,14 +207,6 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 
-	private void displayContacts() {
-
-
-
-		//Refresh frame components in case table contents are changed.
-		validate();
-	}
-
 	@Override
 	public void setModel(Modellable model) {
 		this.model = model;
@@ -233,9 +225,6 @@ public class InventoryView extends JFrame implements Viewable{
 		//app.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
-		
-		//displayContacts();
-
 	}
 
 	@Override
@@ -250,12 +239,31 @@ public class InventoryView extends JFrame implements Viewable{
 					
 					//****More code is needed for multiple search results (items)!!	****
 					
-					itemDetails.setText("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
-							+ "<h3><font color=blue>Quantity</font></h3>" + model.getItemQuantity(mm.getID()) + "<br>"
-							+ "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
-							+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
-							+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
-
+					if (mm instanceof CD){						
+						itemDetails.setText("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
+								+ "<h3><font color=blue>Quantity</font></h3>" + model.getItemQuantity(mm.getID()) + "<br>"
+								+ "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
+								+ "<h3><font color=blue>Artist(s)</font></h3>" + ((CD)mm).getArtist() + "<br>"
+								+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
+								+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
+					}
+					else if (mm instanceof DVD){						
+						itemDetails.setText("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
+								+ "<h3><font color=blue>Quantity</font></h3>" + model.getItemQuantity(mm.getID()) + "<br>"
+								+ "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
+								+ "<h3><font color=blue>Cast(s)</font></h3>" + ((DVD)mm).getCast() + "<br>"
+								+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
+								+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
+					}
+					else if (mm instanceof Book){						
+						itemDetails.setText("<html>" + "<h3><font color=blue>Item ID</font></h3>" + mm.getID() + "<br>" 
+								+ "<h3><font color=blue>Quantity</font></h3>" + model.getItemQuantity(mm.getID()) + "<br>"
+								+ "<h3><font color=blue>Title</font></h3>" + mm.getTitle() + "<br>" 
+								+ "<h3><font color=blue>Author(s)</font></h3>" + ((Book)mm).getAuthor() + "<br>"
+								+ "<h3><font color=blue>ISBN</font></h3>" + ((Book)mm).getISBN() + "<br>"
+								+ "<h3><font color=blue>Genre</font></h3>" + mm.getGenre() + "<br>" 
+								+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
+					}
 					validate();
 				}
 			}
