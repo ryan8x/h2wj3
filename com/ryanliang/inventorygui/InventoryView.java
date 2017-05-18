@@ -187,20 +187,23 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void searchItem() {
-		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
-		controller.searchItem(input);
+		String input = JOptionPane.showInputDialog("Enter item ID number"); 
+		if (input != null)
+			controller.searchItem(input.trim());
 	}
 
 	private void editItem() {
 
-		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
-		controller.searchItemForEditing(input);
+		String input = JOptionPane.showInputDialog("Enter item ID number");
+		if (input != null)
+			controller.searchItemForEditing(input.trim());
 	}
 
 	private void deleteItem() {
 		
-		String input = JOptionPane.showInputDialog("Enter item ID number").trim(); 
-		controller.deleteItem(input);
+		String input = JOptionPane.showInputDialog("Enter item ID number");
+		if (input != null)
+			controller.deleteItem(input.trim());
 	}
 
 	private void newItem() {
