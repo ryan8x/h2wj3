@@ -8,6 +8,7 @@ package com.ryanliang.inventorygui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 @SuppressWarnings("serial")
 public class ItemDialog extends JDialog implements ActionListener{
@@ -61,6 +63,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 	private static final JPanel bookTextFieldPanel = new JPanel();
 	//private static final JPanel errorPanel = new JPanel();
 	private static final JPanel buttonPanel = new JPanel();
+	private static final JPanel southPanel = new JPanel();
 	
 	private static final JPanel CDLabelPanel = new JPanel();
 	private static final JPanel DVDLabelPanel = new JPanel();
@@ -72,7 +75,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 	private static final JRadioButton bookRadioButton = new JRadioButton("Book", false);
 	
 
-	private JLabel errorLabel = new JLabel("");
+	private JLabel errorLabel = new JLabel("", SwingConstants.CENTER);
 
 	public ItemDialog(JFrame frame){
 		super(frame, "New item dialog", true);
@@ -128,14 +131,13 @@ public class ItemDialog extends JDialog implements ActionListener{
 		});
 		
 		doneButton.addActionListener(this);
-		buttonPanel.setLayout(new GridLayout(0,1));
-		//errorPanel.add(errorLabel);
+		
+		buttonPanel.setLayout(new FlowLayout());
+		southPanel.setLayout(new BorderLayout());
 
-		buttonPanel.add(errorLabel);
 		buttonPanel.add(doneButton);
-		//not working
-		//errorLabel.setAlignmentX(CENTER_ALIGNMENT);
-		//doneButton.setAlignmentX(CENTER_ALIGNMENT);
+		southPanel.add(errorLabel, BorderLayout.CENTER);
+		southPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		CDTextFieldPanel.setLayout(textFieldLayout);
 		CDLabelPanel.setLayout(textFieldLayout);
@@ -197,7 +199,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		removePanels();
 		
 		add(panel, BorderLayout.CENTER);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(southPanel, BorderLayout.SOUTH);
 		//add(buttonPanel);
 
 		validate();
@@ -335,7 +337,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		
 		//add(errorPanel);
 		//add(buttonPanel);
-		add(buttonPanel, BorderLayout.SOUTH);
+		add(southPanel, BorderLayout.SOUTH);
 
 	}
 
@@ -356,7 +358,7 @@ public class ItemDialog extends JDialog implements ActionListener{
 		remove(bookMainPanel);
 
 		//remove(errorPanel);
-		remove(buttonPanel);
+		remove(southPanel);
 		
 	}
 
