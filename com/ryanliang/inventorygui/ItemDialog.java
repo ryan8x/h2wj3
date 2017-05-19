@@ -32,53 +32,53 @@ public class ItemDialog extends JDialog implements ActionListener{
 	private String quantity = "1";
 	private MediaCategory media = null;
 	
-	private JTextField CDTitleField = new JTextField(20);
-	private JTextField CDGenreField = new JTextField(20);
-	private JTextField CDArtistField = new JTextField(20);
-	private JTextField CDDescriptionField = new JTextField(20);
-	private JTextField CDQuantityField = new JTextField(20);
+	private final JTextField CDTitleField = new JTextField(20);
+	private final JTextField CDGenreField = new JTextField(20);
+	private final JTextField CDArtistField = new JTextField(20);
+	private final JTextField CDDescriptionField = new JTextField(20);
+	private final JTextField CDQuantityField = new JTextField(20);
 	
-	private JTextField DVDTitleField = new JTextField(20);
-	private JTextField DVDGenreField = new JTextField(20);
-	private JTextField DVDCastField = new JTextField(20);
-	private JTextField DVDDescriptionField = new JTextField(20);
-	private JTextField DVDQuantityField = new JTextField(20);
+	private final JTextField DVDTitleField = new JTextField(20);
+	private final JTextField DVDGenreField = new JTextField(20);
+	private final JTextField DVDCastField = new JTextField(20);
+	private final JTextField DVDDescriptionField = new JTextField(20);
+	private final JTextField DVDQuantityField = new JTextField(20);
 	
-	private JTextField bookTitleField = new JTextField(20);
-	private JTextField bookGenreField = new JTextField(20);
-	private JTextField bookAuthorField = new JTextField(20);
-	private JTextField bookISBNField = new JTextField(20);
-	private JTextField bookDescriptionField = new JTextField(20);
-	private JTextField bookQuantityField = new JTextField(20);
+	private final JTextField bookTitleField = new JTextField(20);
+	private final JTextField bookGenreField = new JTextField(20);
+	private final JTextField bookAuthorField = new JTextField(20);
+	private final JTextField bookISBNField = new JTextField(20);
+	private final JTextField bookDescriptionField = new JTextField(20);
+	private final JTextField bookQuantityField = new JTextField(20);
 		
-	private static final JButton doneButton = new JButton("Done"); 
+	private final JButton doneButton = new JButton("Done"); 
 	
-	private static final JPanel CDMainPanel = new JPanel(new BorderLayout());
-	private static final JPanel DVDMainPanel = new JPanel(new BorderLayout());
-	private static final JPanel bookMainPanel = new JPanel(new BorderLayout());
+	private final JPanel CDMainPanel = new JPanel(new BorderLayout());
+	private final JPanel DVDMainPanel = new JPanel(new BorderLayout());
+	private final JPanel bookMainPanel = new JPanel(new BorderLayout());
 	
-	private static final JPanel radioButtonPanel = new JPanel();
-	private static final JPanel CDTextFieldPanel = new JPanel();
-	private static final JPanel DVDTextFieldPanel = new JPanel();
-	private static final JPanel bookTextFieldPanel = new JPanel();
-	//private static final JPanel errorPanel = new JPanel();
-	private static final JPanel buttonPanel = new JPanel();
-	private static final JPanel southPanel = new JPanel();
+	private final JPanel radioButtonPanel = new JPanel();
+	private final JPanel CDTextFieldPanel = new JPanel();
+	private final JPanel DVDTextFieldPanel = new JPanel();
+	private final JPanel bookTextFieldPanel = new JPanel();
+	//private final JPanel errorPanel = new JPanel();
+	private final JPanel buttonPanel = new JPanel();
+	private final JPanel southPanel = new JPanel();
 	
-	private static final JPanel CDLabelPanel = new JPanel();
-	private static final JPanel DVDLabelPanel = new JPanel();
-	private static final JPanel bookLabelPanel = new JPanel();
+	private final JPanel CDLabelPanel = new JPanel();
+	private final JPanel DVDLabelPanel = new JPanel();
+	private final JPanel bookLabelPanel = new JPanel();
 	
-	private static final ButtonGroup radioGroup = new ButtonGroup();
-	private static final JRadioButton CDRadioButton = new JRadioButton("CD", false);
-	private static final JRadioButton DVDRadioButton = new JRadioButton("DVD", false);
-	private static final JRadioButton bookRadioButton = new JRadioButton("Book", false);
+	private final ButtonGroup radioGroup = new ButtonGroup();
+	private final JRadioButton CDRadioButton = new JRadioButton("CD", false);
+	private final JRadioButton DVDRadioButton = new JRadioButton("DVD", false);
+	private final JRadioButton bookRadioButton = new JRadioButton("Book", false);
 	
 
 	private JLabel errorLabel = new JLabel("", SwingConstants.CENTER);
 
 	public ItemDialog(JFrame frame){
-		super(frame, "New item dialog", true);
+		super(frame, "Item dialog", true);
 
 		Dimension frameSize = frame.getSize();
 		int frameWidth = frameSize.width;

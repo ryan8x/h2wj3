@@ -44,43 +44,36 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private ItemDialog itemDialog = null;
 	
-	private static final JMenuBar menuBar = new JMenuBar();
-	private static final JMenu fileMenu = new JMenu("File");
-	private static final JMenu editMenu = new JMenu("Edit");
-	private static final JMenu helpMenu = new JMenu("Help");
-	private static final JMenuItem openFileMenu = new JMenuItem("Open");
-	private static final JMenuItem saveFileMenu = new JMenuItem("Save");
-	private static final JMenuItem saveAsFileMenu = new JMenuItem("Save As");
-	private static final JMenuItem printFileMenu = new JMenuItem("Print");
-	private static final JMenuItem exitFileMenu = new JMenuItem("Exit");
+	private final JMenuBar menuBar = new JMenuBar();
+	private final JMenu fileMenu = new JMenu("File");
+	private final JMenu editMenu = new JMenu("Edit");
+	private final JMenu helpMenu = new JMenu("Help");
 	
-	private static final JMenuItem newEditMenu = new JMenuItem("New");
-	private static final JMenuItem editEditMenu = new JMenuItem("Edit"); 
-	private static final JMenuItem deleteEditMenu = new JMenuItem("Delete");
-	private static final JMenuItem findEditMenu = new JMenuItem("Find"); 
-	private static final JMenuItem firstEditMenu = new JMenuItem("First");
-	private static final JMenuItem previousEditMenu = new JMenuItem("Previous"); 
-	private static final JMenuItem nextEditMenu = new JMenuItem("Next"); 
-	private static final JMenuItem lastEditMenu = new JMenuItem("Last");
+	private final JMenuItem saveFileMenu = new JMenuItem("Save");
+	private final JMenuItem exitFileMenu = new JMenuItem("Exit");
 	
-	private static final JMenuItem documentationHelpMenu = new JMenuItem("Documentation"); 
-	private static final JMenuItem aboutHelpMenu = new JMenuItem("About");
+	private final JMenuItem newEditMenu = new JMenuItem("New");
+	private final JMenuItem editEditMenu = new JMenuItem("Edit"); 
+	private final JMenuItem deleteEditMenu = new JMenuItem("Delete");
+	private final JMenuItem findEditMenu = new JMenuItem("Find"); 
 	
-	private static final JButton newToolBarButton = new JButton("New"); 
-	private static final JButton editToolBarButton = new JButton("Edit"); 
-	private static final JButton deleteToolBarButton = new JButton("Delete"); 
-	private static final JButton findToolBarButton = new JButton("Find"); 
-	private static final JButton firstToolBarButton = new JButton("First"); 
-	private static final JButton previousToolBarButton = new JButton("Previous"); 
-	private static final JButton nextToolBarButton = new JButton("Next"); 
-	private static final JButton lastToolBarButton = new JButton("Last"); 
+	private final JMenuItem aboutHelpMenu = new JMenuItem("About");
 	
-	private static final JToolBar toolBar = new JToolBar();
+	private final JButton newToolBarButton = new JButton("New"); 
+	private final JButton editToolBarButton = new JButton("Edit"); 
+	private final JButton deleteToolBarButton = new JButton("Delete"); 
+	private final JButton findToolBarButton = new JButton("Find"); 
+	private final JButton firstToolBarButton = new JButton("First"); 
+	private final JButton previousToolBarButton = new JButton("Previous"); 
+	private final JButton nextToolBarButton = new JButton("Next"); 
+	private final JButton lastToolBarButton = new JButton("Last"); 
 	
-	private static final JPanel westPanel = new JPanel();
-	private static final JPanel statusPanel = new JPanel();
-	private static final JLabel totalContactsLabel = new JLabel("Total Contacts: ");
-	private JLabel totalContactsStatus = new JLabel("");
+	private final JToolBar toolBar = new JToolBar();
+	
+	private final JPanel westPanel = new JPanel();
+	private final JPanel statusPanel = new JPanel();
+	private final JLabel searchResultLabel = new JLabel("Search result: ");
+	private JLabel searchResultStatus = new JLabel("");
 	
 	private JLabel itemDetails = new JLabel("");
 	
@@ -88,12 +81,7 @@ public class InventoryView extends JFrame implements Viewable{
 		super("Media inventory system");
 		this.controller = controller;
 					
-		fileMenu.add(openFileMenu);
-		fileMenu.addSeparator();
 		fileMenu.add(saveFileMenu);
-		fileMenu.add(saveAsFileMenu);
-		fileMenu.addSeparator();
-		fileMenu.add(printFileMenu);
 		fileMenu.addSeparator();
 		fileMenu.add(exitFileMenu);
 		
@@ -101,12 +89,7 @@ public class InventoryView extends JFrame implements Viewable{
 		editMenu.add(editEditMenu);
 		editMenu.add(deleteEditMenu);
 		editMenu.add(findEditMenu);
-		editMenu.add(firstEditMenu);
-		editMenu.add(previousEditMenu);
-		editMenu.add(nextEditMenu);
-		editMenu.add(lastEditMenu);
 		
-		helpMenu.add(documentationHelpMenu);
 		helpMenu.add(aboutHelpMenu);
 		
 		menuBar.add(fileMenu);
@@ -129,15 +112,13 @@ public class InventoryView extends JFrame implements Viewable{
 		
 		statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
 		add(statusPanel, BorderLayout.SOUTH);
-
-		statusPanel.add(totalContactsLabel);
-		statusPanel.add(totalContactsStatus);
+		statusPanel.add(searchResultLabel);
+		statusPanel.add(searchResultStatus);
 
 		add(itemDetails);
 		
-		openFileMenu.addActionListener((event) -> {
-			JFileChooser openDialog = new JFileChooser();
-			openDialog.showOpenDialog(null);
+		saveFileMenu.addActionListener(event -> {
+			controller.saveData();	
 		});
 		
 		exitFileMenu.addActionListener(event -> {
@@ -159,31 +140,39 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void lastItem() {
-		if (searchResult.length > 1){
-			resultCounter = searchResult.length - 1;
-			displayResult(searchResult[resultCounter]);		
-		}	
+		if (searchResult != null){
+			if (searchResult.length > 1){
+				resultCounter = searchResult.length - 1;
+				displayResult(searchResult[resultCounter]);		
+			}
+		}
 	}
 
 	private void firstItem() {
-		if (searchResult.length > 1){
-			resultCounter = 0;
-			displayResult(searchResult[resultCounter]);		
-		}	
+		if (searchResult != null){
+			if (searchResult.length > 1){
+				resultCounter = 0;
+				displayResult(searchResult[resultCounter]);		
+			}	
+		}
 	}
 
 	private void nextItem() {
-		if (searchResult.length > 1 && (resultCounter < (searchResult.length-1))){
-			resultCounter++;
-			displayResult(searchResult[resultCounter]);		
-		}	
+		if (searchResult != null){
+			if (searchResult.length > 1 && (resultCounter < (searchResult.length-1))){
+				resultCounter++;
+				displayResult(searchResult[resultCounter]);		
+			}	
+		}
 	}
 
 	private void previousItem() {
-		if (searchResult.length > 1 && (resultCounter > 0)){
-			resultCounter--;
-			displayResult(searchResult[resultCounter]);		
-		}	
+		if (searchResult != null){
+			if (searchResult.length > 1 && (resultCounter > 0)){
+				resultCounter--;
+				displayResult(searchResult[resultCounter]);		
+			}	
+		}
 	}
 
 	private void searchItem() {
@@ -267,10 +256,12 @@ public class InventoryView extends JFrame implements Viewable{
 			if (searchResult.length < 1)
 				JOptionPane.showMessageDialog(null, "Item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
 			else {
+				searchResultStatus.setText(String.valueOf((searchResult.length)));
+				validate();
 				//reset counter
 				resultCounter = 0;
 				displayResult(searchResult[0]);		
-			}			
+			}
 		}
 		else if (ut == UpdateType.EDIT){
 			Media [] result = model.getSearchResult();
