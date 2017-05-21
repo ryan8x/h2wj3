@@ -7,16 +7,10 @@ package com.ryanliang.inventorygui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.LocalDate;
-
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -24,14 +18,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 @SuppressWarnings("serial")
 public class InventoryView extends JFrame implements Viewable{
@@ -41,9 +29,7 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private Media [] searchResult;
 	private int resultCounter = 0;
-	
-	private static String itemID = "0";
-	
+	private static String itemID = "0";	
 	private ItemDialog itemDialog = null;
 	
 	private final JMenuBar menuBar = new JMenuBar();
@@ -74,15 +60,57 @@ public class InventoryView extends JFrame implements Viewable{
 	
 	private final JPanel westPanel = new JPanel();
 	private final JPanel statusPanel = new JPanel();
+	
 	private final JLabel searchResultLabel = new JLabel("Search result: ");
 	private JLabel searchResultStatus = new JLabel("");
-	
 	private JLabel itemDetails = new JLabel("");
 	
 	public InventoryView(Controllable controller) {
 		super("Media inventory system");
 		this.controller = controller;
-					
+				
+		organizeUI();
+		addListeners();
+			
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+	}
+
+	private void addListeners() {
+		saveFileMenu.addActionListener(event -> {
+			controller.saveData();	
+		});
+		
+		exitFileMenu.addActionListener(event -> {
+			quitApp();
+		});
+	
+		aboutHelpMenu.addActionListener(event -> {
+			JOptionPane.showMessageDialog(null, "Media inventory system v1.0 Copyright 2017 RLTech Inc");
+		});
+		
+		newEditMenu.addActionListener(event -> newItem());
+		findEditMenu.addActionListener(event -> searchItem());
+		deleteEditMenu.addActionListener(event -> deleteItem());
+		editEditMenu.addActionListener(event -> editItem());
+		
+		newToolBarButton.addActionListener(event -> newItem());
+		findToolBarButton.addActionListener(event -> searchItem());
+		deleteToolBarButton.addActionListener(event -> deleteItem());
+		editToolBarButton.addActionListener(event -> editItem());
+		
+		nextToolBarButton.addActionListener(event -> nextItem());
+		previousToolBarButton.addActionListener(event -> previousItem());
+		firstToolBarButton.addActionListener(event -> firstItem());
+		lastToolBarButton.addActionListener(event -> lastItem());
+      
+		addWindowListener(new WindowAdapter() {
+		    public void windowClosing(WindowEvent e) {
+		    	quitApp();	
+		    }
+		});
+	}
+
+	private void organizeUI() {
 		fileMenu.add(saveFileMenu);
 		fileMenu.addSeparator();
 		fileMenu.add(exitFileMenu);
@@ -119,41 +147,6 @@ public class InventoryView extends JFrame implements Viewable{
 		setSearchResultStatusVisible(false);
 
 		add(itemDetails);
-		
-		saveFileMenu.addActionListener(event -> {
-			controller.saveData();	
-		});
-		
-		exitFileMenu.addActionListener(event -> {
-			quitApp();
-		});
-	
-		aboutHelpMenu.addActionListener(event -> {
-			JOptionPane.showMessageDialog(null, "Media inventory system v1.0 Copyright 2017 RLTech Inc");
-		});
-		
-		newEditMenu.addActionListener(event -> newItem());
-		findEditMenu.addActionListener(event -> searchItem());
-		deleteEditMenu.addActionListener(event -> deleteItem());
-		editEditMenu.addActionListener(event -> editItem());
-		
-		newToolBarButton.addActionListener(event -> newItem());
-		findToolBarButton.addActionListener(event -> searchItem());
-		deleteToolBarButton.addActionListener(event -> deleteItem());
-		editToolBarButton.addActionListener(event -> editItem());
-		
-		nextToolBarButton.addActionListener(event -> nextItem());
-		previousToolBarButton.addActionListener(event -> previousItem());
-		firstToolBarButton.addActionListener(event -> firstItem());
-		lastToolBarButton.addActionListener(event -> lastItem());
-      
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		
-		addWindowListener(new WindowAdapter() {
-		    public void windowClosing(WindowEvent e) {
-		    	quitApp();	
-		    }
-		});
 	}
 
 	private void quitApp() {
@@ -237,6 +230,7 @@ public class InventoryView extends JFrame implements Viewable{
 		setSearchResultStatusVisible(false);
 		
 		Media temp = null;
+		//Generate item ID which will be needed in the openItemDialog()
 		controller.generateID();
 
 		openItemDialog(temp, "");
@@ -244,16 +238,17 @@ public class InventoryView extends JFrame implements Viewable{
 		if (itemDialog.getDone() == true){
 			Media item = itemDialog.getItem();
 			
-			//may need to check null value.  will analyze later.
 			controller.addItem(item, itemDialog.getQuantity());
 			displayResult(item);
 			
 			searchResult = null;
-		}	
+		}
+		if (itemDialog != null){
+			itemDialog.initUI();
+		}
 	}
 	
 	private void openItemDialog(Media m, String quantity) {
-		
 		if (itemDialog == null)
 			itemDialog = new ItemDialog(this);
 		
@@ -267,14 +262,11 @@ public class InventoryView extends JFrame implements Viewable{
 		itemDialog.setLocationRelativeTo(this);
 		itemDialog.setDone(false);
 		itemDialog.setVisible(true);
-		
 	}
-
 
 	@Override
 	public void setModel(Modellable model) {
 		this.model = model;
-
 	}
 
 	@Override
@@ -286,7 +278,7 @@ public class InventoryView extends JFrame implements Viewable{
 		int screenWidth = (int) (screenSize.width*0.8);
 		int screenHeight = (int) (screenSize.height*0.8);
 		this.setSize(screenWidth, screenHeight);
-		//app.pack();
+
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
@@ -321,14 +313,12 @@ public class InventoryView extends JFrame implements Viewable{
 		else if (ut == UpdateType.ID){
 			itemID = model.getID();
 		}
-
 	}
 
 	private void setSearchResultStatusVisible(boolean v) {
 		searchResultLabel.setVisible(v);
 		searchResultStatus.setVisible(v);
-		validate();
-		
+		validate();	
 	}
 
 	private void editResult(Media mm) {
@@ -337,7 +327,6 @@ public class InventoryView extends JFrame implements Viewable{
 
 			openItemDialog(mm, model.getItemQuantity(mm.getID()));		
 			if (itemDialog.getDone() == true){	
-				//may need to check null value.  will analyze later.
 				CD item = (CD) itemDialog.getItem();
 
 				String ID = item.getID();
@@ -388,6 +377,9 @@ public class InventoryView extends JFrame implements Viewable{
 				controller.editItem(temp, quantity); 
 				displayResult(temp);
 			}
+		}
+		if (itemDialog != null){
+			itemDialog.initUI();
 		}
 	}
 

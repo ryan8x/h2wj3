@@ -32,7 +32,6 @@ public class InventoryModel implements Modellable {
 	
 	@Override
 	public void addItem(Media media, String quantityA) {
-
 		if (media != null && quantityA != null){
 			String quantity = quantityA;
 			String ID = media.getID();
@@ -45,8 +44,7 @@ public class InventoryModel implements Modellable {
 			System.out.println("addItem(Media media, String quantityA) reference is null.");
 	}
 	
-	private void setData(Media media) {
-		
+	private void setData(Media media) {		
 		String none = "None";
 		
 		String ID = media.getID();
@@ -82,13 +80,11 @@ public class InventoryModel implements Modellable {
 			ISBN = ISBN.trim().equals("")?none:ISBN;
 			
 			bookList.setProperty(ID, value + author + delimiter + ISBN);
-		}
-		
+		}	
 	}
 
 	@Override
 	public void editItem(Media media, String quantity) {
-	
 		if (media != null && quantity != null){
 			String ID = media.getID();
 			setData(media);
@@ -103,9 +99,7 @@ public class InventoryModel implements Modellable {
 
 	@Override
 	public void saveData() {
-
 		try {
-
 			FileOutputStream cdOut = new FileOutputStream(CDFile, false);
 			CDList.store(cdOut, "CD List");
 			cdOut.close();
@@ -125,16 +119,13 @@ public class InventoryModel implements Modellable {
 			FileOutputStream IDOut = new FileOutputStream(IDMemoryFile, false);
 			IDMemory.store(IDOut, "ID memory");
 			IDOut.close();
-
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 	
 	@Override
-	public void loadData() {
-		
+	public void loadData() {		
 		File fileCD = new File(CDFile);
 		File fileDVD = new File(DVDFile);
 		File fileBook = new File(bookFile);
@@ -142,7 +133,6 @@ public class InventoryModel implements Modellable {
 		File fileID = new File(IDMemoryFile);
 		
 		try {
-
 			if (fileCD.exists() && !fileCD.isDirectory()){
 				FileInputStream cdIn = new FileInputStream(CDFile);
 				CDList.load(cdIn);
@@ -177,20 +167,17 @@ public class InventoryModel implements Modellable {
 				
 				IDIn.close();
 			}
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	@Override
 	public void setView(Viewable view) {
-
 		this.view = view;
 	}
 	
 	@Override
 	public void searchItem(String query) {
-
 		if (query != null){
 			searchItemHelper(query);
 			view.update(UpdateType.SEARCH_RESULT);
@@ -208,7 +195,6 @@ public class InventoryModel implements Modellable {
 
 	@Override
 	public void deleteItem(String itemID){
-
 		if (itemID != null){
 			CDList.remove(itemID);
 			DVDList.remove(itemID);
@@ -216,24 +202,20 @@ public class InventoryModel implements Modellable {
 			inventory.remove(itemID);
 		}
 		else 
-			System.out.println("deleteItem(String itemID) reference is null.");
-		
+			System.out.println("deleteItem(String itemID) reference is null.");	
 	}
 
 	@Override
 	public void generateID() {
-		view.update(UpdateType.ID);
-		
+		view.update(UpdateType.ID);	
 	}
 	
 	@Override
-	public String getID() {
-		
+	public String getID() {	
 		return String.valueOf(IDCounter);
 	}
 	
-	private void searchItemHelper(String query) {
-		
+	private void searchItemHelper(String query) {	
 		String temp = null;
 		String value;
 		
@@ -324,8 +306,7 @@ public class InventoryModel implements Modellable {
 	}
 
 	@Override
-	public void searchItemForEditing(String itemID) {
-		
+	public void searchItemForEditing(String itemID) {		
 		if (itemID != null){
 			searchItemHelper(itemID);
 			view.update(UpdateType.EDIT);
@@ -336,7 +317,6 @@ public class InventoryModel implements Modellable {
 
 	@Override
 	public String getItemQuantity(String itemID) {
-
 		if (itemID != null)
 			return inventory.getProperty(itemID);
 		else{ 
