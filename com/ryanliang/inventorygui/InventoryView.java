@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.TextField;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 
 import javax.swing.BoxLayout;
@@ -114,6 +116,7 @@ public class InventoryView extends JFrame implements Viewable{
 		add(statusPanel, BorderLayout.SOUTH);
 		statusPanel.add(searchResultLabel);
 		statusPanel.add(searchResultStatus);
+		setSearchResultStatusVisible(false);
 
 		add(itemDetails);
 		
@@ -122,22 +125,46 @@ public class InventoryView extends JFrame implements Viewable{
 		});
 		
 		exitFileMenu.addActionListener(event -> {
-			controller.saveData();	
-			System.exit(0);
+			quitApp();
 		});
 	
+		aboutHelpMenu.addActionListener(event -> {
+			JOptionPane.showMessageDialog(null, "Media inventory system v1.0 Copyright 2017 RLTech Inc");
+		});
+		
 		newEditMenu.addActionListener(event -> newItem());
+		findEditMenu.addActionListener(event -> searchItem());
+		deleteEditMenu.addActionListener(event -> deleteItem());
+		editEditMenu.addActionListener(event -> editItem());
+		
 		newToolBarButton.addActionListener(event -> newItem());
 		findToolBarButton.addActionListener(event -> searchItem());
 		deleteToolBarButton.addActionListener(event -> deleteItem());
 		editToolBarButton.addActionListener(event -> editItem());
+		
 		nextToolBarButton.addActionListener(event -> nextItem());
 		previousToolBarButton.addActionListener(event -> previousItem());
 		firstToolBarButton.addActionListener(event -> firstItem());
 		lastToolBarButton.addActionListener(event -> lastItem());
       
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		
+		addWindowListener(new WindowAdapter() {
+		    public void windowClosing(WindowEvent e) {
+		    	quitApp();	
+		    }
+		});
 	}
+
+	private void quitApp() {
+    	int answer = JOptionPane.showConfirmDialog(null, "Save data?");
+    	if (answer == JOptionPane.YES_OPTION){
+    		controller.saveData();	
+    		System.exit(0);
+    	}
+    	else if (answer == JOptionPane.NO_OPTION)
+    		System.exit(0);		
+    }
 
 	private void lastItem() {
 		if (searchResult != null){
@@ -182,20 +209,33 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void editItem() {
-
+		clearItemDetails();
+		setSearchResultStatusVisible(false);
+		
 		String input = JOptionPane.showInputDialog("Enter item ID number");
-		if (input != null)
+		if (input != null){
 			controller.searchItemForEditing(input.trim());
+			
+			searchResult = null;
+		}
 	}
 
 	private void deleteItem() {
+		clearItemDetails();
+		setSearchResultStatusVisible(false);
 		
 		String input = JOptionPane.showInputDialog("Enter item ID number");
-		if (input != null)
+		if (input != null){
 			controller.deleteItem(input.trim());
+			
+			searchResult = null;
+		}
 	}
 
 	private void newItem() {
+		clearItemDetails();
+		setSearchResultStatusVisible(false);
+		
 		Media temp = null;
 		controller.generateID();
 
@@ -206,6 +246,9 @@ public class InventoryView extends JFrame implements Viewable{
 			
 			//may need to check null value.  will analyze later.
 			controller.addItem(item, itemDialog.getQuantity());
+			displayResult(item);
+			
+			searchResult = null;
 		}	
 	}
 	
@@ -253,14 +296,18 @@ public class InventoryView extends JFrame implements Viewable{
 		if (ut == UpdateType.SEARCH_RESULT){
 			searchResult = model.getSearchResult();
 			
-			if (searchResult.length < 1)
+			if (searchResult.length < 1){
+				clearItemDetails();
 				JOptionPane.showMessageDialog(null, "Item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
+			}
 			else {
 				searchResultStatus.setText(String.valueOf((searchResult.length)));
 				validate();
 				//reset counter
 				resultCounter = 0;
-				displayResult(searchResult[0]);		
+				displayResult(searchResult[0]);	
+				
+				setSearchResultStatusVisible(true);
 			}
 		}
 		else if (ut == UpdateType.EDIT){
@@ -277,7 +324,15 @@ public class InventoryView extends JFrame implements Viewable{
 
 	}
 
+	private void setSearchResultStatusVisible(boolean v) {
+		searchResultLabel.setVisible(v);
+		searchResultStatus.setVisible(v);
+		validate();
+		
+	}
+
 	private void editResult(Media mm) {
+		Media temp;
 		if (mm instanceof CD){	
 
 			openItemDialog(mm, model.getItemQuantity(mm.getID()));		
@@ -292,7 +347,9 @@ public class InventoryView extends JFrame implements Viewable{
 				String description = item.getDescription();
 				String artist = item.getArtist();
 
-				controller.editItem(new CD(ID, title, description , genre, artist), quantity); 
+				temp = new CD(ID, title, description , genre, artist);
+				controller.editItem(temp, quantity); 
+				displayResult(temp);
 			}
 		}
 		else if (mm instanceof DVD){	
@@ -308,7 +365,9 @@ public class InventoryView extends JFrame implements Viewable{
 				String description = item.getDescription();
 				String cast = item.getCast();
 
-				controller.editItem(new DVD(ID, title, description , genre, cast), quantity); 
+				temp = new DVD(ID, title, description , genre, cast);
+				controller.editItem(temp, quantity); 
+				displayResult(temp);
 			}
 		}
 		else if (mm instanceof Book){	
@@ -325,7 +384,9 @@ public class InventoryView extends JFrame implements Viewable{
 				String author = item.getAuthor();
 				String ISBN = item.getISBN();
 
-				controller.editItem(new Book(ID, title, description , genre, author, ISBN), quantity); 
+				temp = new Book(ID, title, description , genre, author, ISBN);
+				controller.editItem(temp, quantity); 
+				displayResult(temp);
 			}
 		}
 	}
@@ -357,6 +418,10 @@ public class InventoryView extends JFrame implements Viewable{
 					+ "<h3><font color=blue>Description</font></h3>" + mm.getDescription() + "<br>" +  "</html>");
 		}
 		validate();
+	}
+
+	private void clearItemDetails() {
+		itemDetails.setText("");
 	}
 
 }
