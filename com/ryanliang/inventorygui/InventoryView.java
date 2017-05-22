@@ -196,7 +196,7 @@ public class InventoryView extends JFrame implements Viewable{
 	}
 
 	private void searchItem() {
-		String input = JOptionPane.showInputDialog("Enter item ID number"); 
+		String input = JOptionPane.showInputDialog("Enter item ID number or a phrase"); 
 		if (input != null)
 			controller.searchItem(input.trim());
 	}
@@ -204,30 +204,29 @@ public class InventoryView extends JFrame implements Viewable{
 	private void editItem() {
 		clearItemDetails();
 		setSearchResultStatusVisible(false);
+		searchResult = null;
 		
 		String input = JOptionPane.showInputDialog("Enter item ID number");
 		if (input != null){
 			controller.searchItemForEditing(input.trim());
-			
-			searchResult = null;
 		}
 	}
 
 	private void deleteItem() {
 		clearItemDetails();
 		setSearchResultStatusVisible(false);
+		searchResult = null;
 		
 		String input = JOptionPane.showInputDialog("Enter item ID number");
 		if (input != null){
 			controller.deleteItem(input.trim());
-			
-			searchResult = null;
 		}
 	}
 
 	private void newItem() {
 		clearItemDetails();
 		setSearchResultStatusVisible(false);
+		searchResult = null;
 		
 		Media temp = null;
 		//Generate item ID which will be needed in the openItemDialog()
@@ -240,8 +239,6 @@ public class InventoryView extends JFrame implements Viewable{
 			
 			controller.addItem(item, itemDialog.getQuantity());
 			displayResult(item);
-			
-			searchResult = null;
 		}
 		if (itemDialog != null){
 			itemDialog.initUI();
@@ -290,6 +287,7 @@ public class InventoryView extends JFrame implements Viewable{
 			
 			if (searchResult.length < 1){
 				clearItemDetails();
+				setSearchResultStatusVisible(false);
 				JOptionPane.showMessageDialog(null, "Item does not exist", "alert", JOptionPane.ERROR_MESSAGE); 
 			}
 			else {

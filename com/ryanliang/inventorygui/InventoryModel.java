@@ -265,9 +265,10 @@ public class InventoryModel implements Modellable {
 			else{
 				query = query.toLowerCase();
 				for (String key : CDList.stringPropertyNames()){
-					value = CDList.getProperty(key).toLowerCase();
+					temp = CDList.getProperty(key);
+					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split(delimiter);
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -277,9 +278,10 @@ public class InventoryModel implements Modellable {
 					}
 				}
 				for (String key : DVDList.stringPropertyNames()){
-					value = DVDList.getProperty(key).toLowerCase();
+					temp = DVDList.getProperty(key);
+					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split(delimiter);
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
@@ -289,9 +291,10 @@ public class InventoryModel implements Modellable {
 					}
 				}
 				for (String key : bookList.stringPropertyNames()){
-					value = bookList.getProperty(key).toLowerCase();
+					temp = bookList.getProperty(key);
+					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = value.split(delimiter);
+						String[] parts = temp.split(delimiter);
 						String title = parts[0]; 
 						String description = parts[1]; 
 						String genre = parts[2]; 
