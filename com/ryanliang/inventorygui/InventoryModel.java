@@ -262,6 +262,43 @@ public class InventoryModel implements Modellable {
 					break;
 				}
 			}
+			else if (query.equals("return-all-cds")){
+				for (String key : CDList.stringPropertyNames()){
+					temp = CDList.getProperty(key);
+					String[] parts = temp.split(delimiter);
+					String title = parts[0]; 
+					String description = parts[1]; 
+					String genre = parts[2]; 
+					String artist = parts[3]; 
+
+					searchResult.add(new CD(key, title, description, genre, artist));
+				}
+			}
+			else if (query.equals("return-all-dvds")){
+				for (String key : DVDList.stringPropertyNames()){
+					temp = DVDList.getProperty(key);
+					String[] parts = temp.split(delimiter);
+					String title = parts[0]; 
+					String description = parts[1]; 
+					String genre = parts[2]; 
+					String cast = parts[3]; 
+
+					searchResult.add(new DVD(key, title, description, genre, cast));
+				}
+			}				
+			else if (query.equals("return-all-books")){
+				for (String key : bookList.stringPropertyNames()){
+					temp = bookList.getProperty(key);
+					String[] parts = temp.split(delimiter);
+					String title = parts[0]; 
+					String description = parts[1]; 
+					String genre = parts[2]; 
+					String author = parts[3]; 
+					String ISBN = parts[4]; 
+
+					searchResult.add(new Book(key, title, description, genre, author, ISBN));
+				}				
+			}
 			else{
 				query = query.toLowerCase();
 				for (String key : CDList.stringPropertyNames()){
