@@ -5,9 +5,6 @@
 
 package com.ryanliang.inventorygui;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 public class CD extends Media{
 	
 	private String artist;
