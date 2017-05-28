@@ -219,130 +219,97 @@ public class InventoryModel implements Modellable {
 		String temp = null;
 		String value;
 		
-		//To enable search based on ID or word phrase.
 		if (!query.equals("")){
+			//ID based search
 			if (Utility.isNumeric(query)){
 				while (true){
 					temp = CDList.getProperty(query);
 					if (temp != null){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String artist = parts[3]; 
-
-						searchResult.add(new CD(query, title, description, genre, artist));
+						searchResultHelper(query, temp, MediaCategory.CD);
 						break;
 					}		
 
 					temp = DVDList.getProperty(query);
-					if (temp != null){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String cast = parts[3]; 
-
-						searchResult.add(new DVD(query, title, description, genre, cast));
+					if (temp != null){			
+						searchResultHelper(query, temp, MediaCategory.DVD);
 						break;
 					}	
 
 					temp = bookList.getProperty(query);
-					if (temp != null){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String author = parts[3]; 
-						String ISBN = parts[4]; 
-
-						searchResult.add(new Book(query, title, description, genre, author, ISBN));
+					if (temp != null){					
+						searchResultHelper(query, temp, MediaCategory.BOOK);
 						break;
 					}	
 					break;
 				}
 			}
+			//simple return all CDs, DVDs or Books
 			else if (query.equals("return-all-cds")){
 				for (String key : CDList.stringPropertyNames()){
 					temp = CDList.getProperty(key);
-					String[] parts = temp.split(delimiter);
-					String title = parts[0]; 
-					String description = parts[1]; 
-					String genre = parts[2]; 
-					String artist = parts[3]; 
-
-					searchResult.add(new CD(key, title, description, genre, artist));
+					searchResultHelper(key, temp, MediaCategory.CD);
 				}
 			}
 			else if (query.equals("return-all-dvds")){
 				for (String key : DVDList.stringPropertyNames()){
 					temp = DVDList.getProperty(key);
-					String[] parts = temp.split(delimiter);
-					String title = parts[0]; 
-					String description = parts[1]; 
-					String genre = parts[2]; 
-					String cast = parts[3]; 
-
-					searchResult.add(new DVD(key, title, description, genre, cast));
+					searchResultHelper(key, temp, MediaCategory.DVD);
 				}
 			}				
 			else if (query.equals("return-all-books")){
 				for (String key : bookList.stringPropertyNames()){
 					temp = bookList.getProperty(key);
-					String[] parts = temp.split(delimiter);
-					String title = parts[0]; 
-					String description = parts[1]; 
-					String genre = parts[2]; 
-					String author = parts[3]; 
-					String ISBN = parts[4]; 
-
-					searchResult.add(new Book(key, title, description, genre, author, ISBN));
+					searchResultHelper(key, temp, MediaCategory.BOOK);
 				}				
 			}
+			//Word phrase based search
 			else{
 				query = query.toLowerCase();
 				for (String key : CDList.stringPropertyNames()){
 					temp = CDList.getProperty(key);
 					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String artist = parts[3]; 
-
-						searchResult.add(new CD(key, title, description, genre, artist));
+						searchResultHelper(key, temp, MediaCategory.CD);
 					}
 				}
 				for (String key : DVDList.stringPropertyNames()){
 					temp = DVDList.getProperty(key);
 					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String cast = parts[3]; 
-
-						searchResult.add(new DVD(key, title, description, genre, cast));
+						searchResultHelper(key, temp, MediaCategory.DVD);
 					}
 				}
 				for (String key : bookList.stringPropertyNames()){
 					temp = bookList.getProperty(key);
 					value = temp.toLowerCase();
 					if (value.contains(query)){
-						String[] parts = temp.split(delimiter);
-						String title = parts[0]; 
-						String description = parts[1]; 
-						String genre = parts[2]; 
-						String author = parts[3]; 
-						String ISBN = parts[4]; 
-
-						searchResult.add(new Book(key, title, description, genre, author, ISBN));
+						searchResultHelper(key, temp, MediaCategory.BOOK);
 					}
 				}
 			}
 		}
+	}
+
+	private void searchResultHelper(String key, String str, MediaCategory media) {
+		String[] parts = str.split(delimiter);	
+		String title = parts[0]; 
+		String description = parts[1]; 
+		String genre = parts[2]; 
+		
+		if (media == MediaCategory.CD){
+			String artist = parts[3]; 
+			searchResult.add(new CD(key, title, description, genre, artist));
+		}
+		else if (media == MediaCategory.DVD){
+			String cast = parts[3]; 
+			searchResult.add(new DVD(key, title, description, genre, cast));
+		}
+		else if (media == MediaCategory.BOOK){
+			String author = parts[3]; 
+			String ISBN = parts[4]; 
+			searchResult.add(new Book(key, title, description, genre, author, ISBN));
+		}
+
 	}
 
 	@Override

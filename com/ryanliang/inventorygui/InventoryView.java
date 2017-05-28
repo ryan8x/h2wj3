@@ -43,18 +43,21 @@ public class InventoryView extends JFrame implements Viewable{
 	private final JMenuItem newEditMenu = new JMenuItem("New");
 	private final JMenuItem editEditMenu = new JMenuItem("Edit"); 
 	private final JMenuItem deleteEditMenu = new JMenuItem("Delete");
-	private final JMenuItem findEditMenu = new JMenuItem("Find"); 
+	private final JMenuItem searchEditMenu = new JMenuItem("Search"); 
 	
 	private final JMenuItem aboutHelpMenu = new JMenuItem("About");
 	
 	private final JButton newToolBarButton = new JButton("New"); 
 	private final JButton editToolBarButton = new JButton("Edit"); 
 	private final JButton deleteToolBarButton = new JButton("Delete"); 
-	private final JButton findToolBarButton = new JButton("Find"); 
+	private final JButton findToolBarButton = new JButton("Search"); 
 	private final JButton firstToolBarButton = new JButton("First"); 
 	private final JButton previousToolBarButton = new JButton("Previous"); 
 	private final JButton nextToolBarButton = new JButton("Next"); 
 	private final JButton lastToolBarButton = new JButton("Last"); 
+	private final JButton CDsToolBarButton = new JButton("CDs"); 
+	private final JButton DVDsToolBarButton = new JButton("DVDs"); 
+	private final JButton BooksToolBarButton = new JButton("Books"); 
 	
 	private final JToolBar toolBar = new JToolBar();
 	
@@ -89,7 +92,7 @@ public class InventoryView extends JFrame implements Viewable{
 		});
 		
 		newEditMenu.addActionListener(event -> newItem());
-		findEditMenu.addActionListener(event -> searchItem());
+		searchEditMenu.addActionListener(event -> searchItem());
 		deleteEditMenu.addActionListener(event -> deleteItem());
 		editEditMenu.addActionListener(event -> editItem());
 		
@@ -102,6 +105,10 @@ public class InventoryView extends JFrame implements Viewable{
 		previousToolBarButton.addActionListener(event -> previousItem());
 		firstToolBarButton.addActionListener(event -> firstItem());
 		lastToolBarButton.addActionListener(event -> lastItem());
+		
+		CDsToolBarButton.addActionListener(event -> getAllCDs());
+		DVDsToolBarButton.addActionListener(event -> getAllDVDs());
+		BooksToolBarButton.addActionListener(event -> getAllBooks());
       
 		addWindowListener(new WindowAdapter() {
 		    public void windowClosing(WindowEvent e) {
@@ -118,7 +125,7 @@ public class InventoryView extends JFrame implements Viewable{
 		editMenu.add(newEditMenu);
 		editMenu.add(editEditMenu);
 		editMenu.add(deleteEditMenu);
-		editMenu.add(findEditMenu);
+		editMenu.add(searchEditMenu);
 		
 		helpMenu.add(aboutHelpMenu);
 		
@@ -130,11 +137,18 @@ public class InventoryView extends JFrame implements Viewable{
 		toolBar.add(newToolBarButton);
 		toolBar.add(editToolBarButton);
 		toolBar.add(deleteToolBarButton);
+		toolBar.addSeparator();
+		toolBar.add(CDsToolBarButton);
+		toolBar.add(DVDsToolBarButton);
+		toolBar.add(BooksToolBarButton);
+		toolBar.addSeparator();
 		toolBar.add(findToolBarButton);
+		toolBar.addSeparator();
 		toolBar.add(firstToolBarButton);
 		toolBar.add(previousToolBarButton);
 		toolBar.add(nextToolBarButton);
 		toolBar.add(lastToolBarButton);
+
 		add(toolBar, BorderLayout.NORTH);
 		
 		add(westPanel, BorderLayout.WEST);
@@ -159,6 +173,18 @@ public class InventoryView extends JFrame implements Viewable{
     		System.exit(0);		
     }
 
+	private void getAllCDs() {
+		controller.searchItem("return-all-cds");
+	}
+	
+	private void getAllDVDs() {
+		controller.searchItem("return-all-dvds");
+	}
+	
+	private void getAllBooks() {
+		controller.searchItem("return-all-books");
+	}
+	
 	private void lastItem() {
 		if (searchResult != null){
 			if (searchResult.length > 1){
